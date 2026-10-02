@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Практическое задание «Тест-дизайн» — модуль подбора ячеек хранения</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+    line-height: 1.55;
+    color: #222;
+    background: #f4f6f9;
+    margin: 0;
+    padding: 24px 12px;
+    font-size: 14.5px;
+  }
+  .container { max-width: 1140px; margin: 0 auto; background: #fff; padding: 34px 46px 46px;
+    border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,.08); }
+
+  /* ── Титульный лист ── */
+  .titlepage { text-align: center; padding: 40px 0 30px; page-break-after: always; }
+  .titlepage .org { font-size: 14px; color: #444; line-height: 1.5; }
+  .titlepage h1 { color: #1a3d7c; font-size: 23px; margin: 26px 0 6px; line-height: 1.3; }
+  .titlepage .subtitle { font-size: 16px; color: #555; font-style: italic; margin-bottom: 34px; }
+  .titlepage .topic { font-size: 18px; font-weight: 600; color: #1a3d7c; margin: 24px 0 40px; line-height: 1.4; }
+  .titlepage table { width: 78%; margin: 0 auto; font-size: 14px; border: none; }
+  .titlepage table td { border: none; padding: 6px 8px; }
+  .titlepage table td:first-child { text-align: right; width: 42%; color: #444; }
+  .titlepage table td:last-child { text-align: left; border-bottom: 1px solid #999; font-weight: 600; }
+  .titlepage .city { margin-top: 56px; font-size: 14px; color: #333; }
+
+  h1.sec { text-align: center; color: #1a3d7c; font-size: 22px; margin: 0 0 6px;
+    border-bottom: 3px solid #1a3d7c; padding-bottom: 14px; }
+  h2 { color: #1a3d7c; font-size: 19px; margin-top: 36px; padding-bottom: 6px; border-bottom: 2px solid #d5dce8; }
+  h3 { color: #2c5282; font-size: 16.5px; margin-top: 26px; }
+  h4 { color: #2c5282; font-size: 15px; margin: 20px 0 6px; }
+  p { margin: 8px 0; }
+  ul, ol { padding-left: 26px; margin: 8px 0; }
+  li { margin-bottom: 5px; }
+
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 13.5px; }
+  th, td { border: 1px solid #b8c4d6; padding: 7px 9px; text-align: left; vertical-align: top; }
+  th { background: #1a3d7c; color: #fff; font-weight: 600; text-align: center; }
+  tr:nth-child(even) { background: #f7f9fc; }
+  td.center, th.center { text-align: center; }
+  td.nowrap { white-space: nowrap; }
+  .rule-row td { background: #f0f5ff !important; }
+  .total-row { font-weight: bold; background: #dbe6f5 !important; }
+
+  .info { background: #eef3fb; border-left: 5px solid #1a3d7c; padding: 14px 20px; border-radius: 5px; margin: 16px 0; font-size: 14.5px; }
+  .info p { margin: 5px 0; }
+  .note { background: #fff8e1; border-left: 5px solid #f0a800; padding: 12px 18px; border-radius: 5px; margin: 15px 0; font-size: 14px; }
+  .tip { background: #e8f5e9; border-left: 5px solid #2e7d32; padding: 12px 18px; border-radius: 5px; margin: 15px 0; font-size: 14px; }
+  .answer { background: #e8f5e9; border-left: 4px solid #2e7d32; padding: 12px 16px; border-radius: 5px; margin: 12px 0; font-size: 14px; }
+
+  code { background: #f0f3f8; color: #b03060; padding: 1px 5px; border-radius: 3px;
+    font-family: Consolas, 'Courier New', monospace; font-size: 12.5px; }
+  .ok { color: #2e7d32; font-weight: 600; }
+  .err { color: #c62828; font-weight: 600; }
+  .muted { color: #666; font-size: 13px; }
+
+  /* ── Тест-кейсы (карточки) ── */
+  .tc { border: 1px solid #b8c4d6; border-radius: 6px; margin: 14px 0; page-break-inside: avoid; overflow: hidden; }
+  .tc-head { background: #2c5282; color: #fff; padding: 7px 12px; font-size: 14.5px; font-weight: 600; }
+  .tc-head .st { float: right; font-weight: 700; }
+  .tc table { margin: 0; font-size: 13px; border: none; }
+  .tc td { border: none; border-bottom: 1px solid #e3e9f2; padding: 6px 12px; }
+  .tc tr:last-child td { border-bottom: none; }
+  .tc td.k { width: 24%; background: #f7f9fc; color: #2c5282; font-weight: 600; }
+  .tc tr:nth-child(even) td { background: #fff; }
+  .tc tr:nth-child(even) td.k { background: #f7f9fc; }
+
+  .footer { margin-top: 44px; text-align: center; font-size: 12.5px; color: #888;
+    border-top: 1px solid #ddd; padding-top: 14px; }
+  .step-num { display: inline-block; background: #2c5282; color: #fff; width: 26px; height: 26px;
+    border-radius: 50%; text-align: center; line-height: 26px; font-weight: bold; font-size: 14px; margin-right: 8px; }
+  .pb { page-break-before: always; }
+
+  @media print {
+    body { background: #fff; padding: 0; font-size: 12.5px; }
+    .container { box-shadow: none; padding: 0; max-width: 100%; }
+    h2 { page-break-after: avoid; } h3, h4 { page-break-after: avoid; }
+    table, .tc, .info, .note, .tip, .answer { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- ══════════════════ ТИТУЛЬНЫЙ ЛИСТ ══════════════════ -->
+<div class="titlepage">
+  <div class="org">
+    <strong>Практическое задание по дисциплине</strong><br>
+    МДК.05.03 «Тестирование информационных систем»<br>
+    Специальность 09.02.07 «Информационные системы и программирование»
+  </div>
+
+  <h1>ПРАКТИЧЕСКОЕ ЗАДАНИЕ<br>по теме «Тест-дизайн»</h1>
+  <div class="subtitle">Свободная тема — тестирование информационной системы</div>
+
+  <div class="topic">Тема работы:<br>
+    Модуль автоматического подбора ячеек хранения<br>
+    в ИС «Склад» для ООО «Домашний интерьер»</div>
+
+  <table>
+    <tr><td>Выполнил(и)</td><td>Резанов К. В., Пильчук С. Ю.</td></tr>
+    <tr><td>Группа</td><td>_________________</td></tr>
+    <tr><td>Курс</td><td>4</td></tr>
+    <tr><td>Дисциплина</td><td>МДК.05.03 «Тестирование информационных систем»</td></tr>
+    <tr><td>Объект тестирования</td><td>ИС «Склад» (WMS) для склада мебельного магазина ООО «Домашний интерьер»</td></tr>
+    <tr><td>Дата выполнения</td><td>2026 г.</td></tr>
+  </table>
+
+  <div class="city">Москва, 2026</div>
+</div>
+
+<!-- ══════════════════ ВВЕДЕНИЕ ══════════════════ -->
+<h1 class="sec">Введение</h1>
+
+<div class="info">
+  <p><strong>Цель работы:</strong> освоить и применить техники тест-дизайна для проектирования проверок
+  информационной системы: выделение классов эквивалентности и граничных значений, построение таблицы решений,
+  попарное (pairwise) тестирование, составление тест-кейсов и чек-листа.</p>
+  <p><strong>Задачи работы:</strong></p>
+  <ol style="margin:5px 0 0">
+    <li>описать тестируемую систему, её входные и выходные параметры и бизнес-правила;</li>
+    <li>выделить классы эквивалентности и граничные значения для каждого входного параметра;</li>
+    <li>построить таблицу решений для основной бизнес-логики модуля;</li>
+    <li>составить минимальный набор попарных комбинаций входных параметров;</li>
+    <li>разработать не менее 15 тест-кейсов и чек-лист из 10–12 пунктов;</li>
+    <li>выполнить разработанные проверки на действующей системе и зафиксировать фактические результаты.</li>
+  </ol>
+  <p><strong>Формируемые умения:</strong> анализ требований, выделение классов эквивалентности и граничных
+  значений, построение таблиц решений, составление тест-кейсов и чек-листов.</p>
+  <p><strong>Оборудование и программные средства:</strong> ПК, Node.js 24, СУБД SQLite, Google Chrome,
+  Microsoft Word, текстовый редактор.</p>
+</div>
+
+<!-- ══════════════════ 1 ══════════════════ -->
+<h2><span class="step-num">1</span> Описание системы и входных параметров</h2>
+
+<h3>1.1. Краткая характеристика информационной системы</h3>
+<p>Информационная система «Склад» (ИС «Склад») предназначена для автоматизации учёта товарно-материальных
+ценностей на складе мебельного магазина ООО «Домашний интерьер». Система обеспечивает приёмку товара от
+поставщиков, адресное хранение, комплектацию и отгрузку заказов покупателей, проведение инвентаризации
+и контроль действий персонала. По функциональному назначению система относится к классу систем управления
+складом (WMS — Warehouse Management System).</p>
+<p>Склад хранит крупногабаритную мебель (диваны, кресла, кровати, шкафы, комоды, столы, матрасы, тумбы, полки).
+Склад разделён на функциональные зоны: зону приёмки, зоны хранения (три стеллажные зоны по классам ходкости
+и зону крупногабаритных грузов) и зону отгрузки. Зоны хранения оборудованы стеллажами; каждой ячейке
+присваивается адрес вида «стеллаж — секция — ярус» (например, <code>B1-01-2</code>).</p>
+<p>Архитектура системы — клиент-серверное веб-приложение: серверная часть (Node.js + Express 4, СУБД SQLite)
+предоставляет программный интерфейс (API), клиентская часть (React 18 + Vite) работает в браузере.</p>
+
+<h3>1.2. Объект тестирования и обоснование выбора темы</h3>
+<p>Объектом тестирования выбран <strong>модуль автоматического подбора ячеек для размещения принятого
+товара</strong> — функция <code>suggestCells(productId, qty, limit)</code> серверного модуля
+<code>server/src/util.js</code>. Модуль реализует требование Т9 технического задания: «Автоматический подбор
+ячеек для размещения принятого товара с проверкой габаритов, объёма, грузоподъёмности, класса ходкости
+и признака хрупкости».</p>
+
+<p><strong>Обоснование выбора темы.</strong> Тема выбрана по следующим причинам:</p>
+<ol>
+  <li>Модуль содержит <strong>явную логику принятия решений</strong>: он последовательно применяет три
+  стратегии размещения (докладка в занятую ячейку с тем же товаром → свободная ячейка своего класса ходкости →
+  свободная ячейка другого класса), а при отсутствии подходящих ячеек формирует частичное размещение.
+  Такой алгоритм естественно ложится на таблицу решений.</li>
+  <li>Модуль принимает <strong>несколько входных параметров, влияющих на результат</strong> (габариты, масса,
+  класс ходкости, признак хрупкости, количество единиц, а также параметры ячейки-кандидата), что позволяет
+  применить классы эквивалентности, граничные значения и попарное тестирование.</li>
+  <li>Модуль <strong>непосредственно влияет на сохранность товара</strong>: ошибка подбора приводит к
+  перегрузке ячейки, порче хрупкого груза или невозможности разместить партию — это наиболее критичный
+  риск складского учёта.</li>
+  <li>Модуль реализован в собственном проекте, что даёт возможность выполнить тест-кейсы на действующем
+  коде и зафиксировать реальные фактические результаты, а не предполагаемые.</li>
+</ol>
+
+<h4>Место модуля в системе</h4>
+<table>
+  <thead>
+    <tr><th style="width:30%">Характеристика</th><th>Значение</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Файл реализации</strong></td><td><code>WAREHOUSE/server/src/util.js</code>, функция <code>suggestCells()</code></td></tr>
+    <tr><td><strong>Вызывающий код</strong></td><td><code>server/src/routes/receipts.js</code>, обработчик <code>POST /api/receipts/:id/place</code> — размещение приёмки</td></tr>
+    <tr><td><strong>Экран интерфейса</strong></td><td>Карточка приёмки, действие «Разместить» (<code>client/src/pages/ReceiptDetail.jsx</code>)</td></tr>
+    <tr><td><strong>Используемые данные</strong></td><td>Таблицы <code>products</code>, <code>cells</code>, <code>zones</code>, <code>stock</code></td></tr>
+    <tr><td><strong>Результат действия</strong></td><td>Список ячеек с указанием адреса, вместимости и причины выбора; перемещение товара из зоны приёмки в ячейки хранения</td></tr>
+  </tbody>
+</table>
+
+<h3>1.3. Входные параметры</h3>
+<table>
+  <thead>
+    <tr><th style="width:5%">№</th><th style="width:24%">Параметр</th><th style="width:30%">Тип / допустимые значения</th><th>Влияет на результат</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="center">1</td><td><strong>Габариты товара</strong> (длина, ширина, высота)</td><td>Три положительных вещественных числа, мм. Допустимо 0…3600. Учитываются с возможностью поворота: стороны сравниваются после сортировки по возрастанию</td><td>Определяет, в какие ячейки товар вообще может поместиться. Основной фильтр</td></tr>
+    <tr><td class="center">2</td><td><strong>Масса товара</strong></td><td>Вещественное число &gt; 0, кг. Допустимо 0,1…900</td><td>Ограничивает вместимость ячейки по грузоподъёмности</td></tr>
+    <tr><td class="center">3</td><td><strong>Класс ходкости товара</strong></td><td>Перечислимый тип: <code>A</code>, <code>B</code>, <code>C</code></td><td>Определяет приоритет ячеек: сначала подбираются ячейки с тем же классом ходкости</td></tr>
+    <tr><td class="center">4</td><td><strong>Признак «хрупкий»</strong></td><td>Логический признак: <code>0</code> (нет) / <code>1</code> (да)</td><td>Для хрупкого товара запрещается размещение на 3-м ярусе стеллажа</td></tr>
+    <tr><td class="center">5</td><td><strong>Количество единиц</strong></td><td>Целое число &gt; 0, шт.</td><td>Определяет, сколько ячеек нужно подобрать; при нехватке — частичное размещение</td></tr>
+    <tr><td class="center">6</td><td><strong>Габариты ячейки</strong> (длина, ширина, высота)</td><td>Три положительных вещественных числа, мм</td><td>Проверяются против габаритов товара (параметр 1)</td></tr>
+    <tr><td class="center">7</td><td><strong>Предельная масса ячейки</strong></td><td>Вещественное число, кг</td><td>Ограничивает вместимость: ⌊свободная масса / масса товара⌋</td></tr>
+    <tr><td class="center">8</td><td><strong>Предельный объём ячейки</strong></td><td>Вещественное число, м³</td><td>Ограничивает вместимость: ⌊свободный объём / объём товара⌋</td></tr>
+    <tr><td class="center">9</td><td><strong>Класс ходкости ячейки</strong></td><td>Перечислимый тип: <code>A</code>, <code>B</code>, <code>C</code> либо пусто (не заполнен)</td><td>Определяет, относится ячейка к «своему» или «чужому» классу</td></tr>
+    <tr><td class="center">10</td><td><strong>Ярус (уровень) ячейки</strong></td><td>Целое число 1…3</td><td>Для хрупкого товара допускаются только ярусы 1 и 2</td></tr>
+    <tr><td class="center">11</td><td><strong>Статус ячейки</strong></td><td>Перечислимый тип: <code>free</code>, <code>occupied</code>, <code>blocked</code>, <code>maintenance</code></td><td>В подбор попадают только ячейки в статусе <code>free</code> (новые) и <code>occupied</code> (докладка)</td></tr>
+    <tr><td class="center">12</td><td><strong>Координаты зоны</strong> (x, y)</td><td>Целые числа — координаты зоны на карте склада</td><td>Определяют порядок выдачи ячеек: ближайшие к зоне отгрузки выдаются раньше</td></tr>
+  </tbody>
+</table>
+
+<h3>1.4. Выходные параметры</h3>
+<table>
+  <thead>
+    <tr><th style="width:5%">№</th><th style="width:30%">Параметр</th><th style="width:22%">Тип</th><th>Назначение</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="center">1</td><td><strong>Список ячеек для размещения</strong> (массив)</td><td>Массив объектов, 0…20 элементов</td><td>Основной результат подбора. Может быть пустым, если подходящих ячеек нет</td></tr>
+    <tr><td class="center">2</td><td>Адрес ячейки (<code>code</code>)</td><td>Строка вида <code>B1-01-2</code></td><td>Место, куда кладовщик перемещает товар</td></tr>
+    <tr><td class="center">3</td><td>Вместимость (<code>room</code>)</td><td>Целое число, шт.</td><td>Сколько единиц товара помещается в ячейку с учётом её текущей заполненности</td></tr>
+    <tr><td class="center">4</td><td>Причина выбора (<code>reason</code>)</td><td>Строка: «докладка в ту же ячейку», «свободна, класс X», «вне зоны класса — по габаритам»</td><td>Объясняет кладовщику решение алгоритма</td></tr>
+    <tr><td class="center">5</td><td>Зона, стеллаж, секция, ярус</td><td>Строка / целое число</td><td>Дополнительные сведения для навигации по складу</td></tr>
+    <tr><td class="center">6</td><td><strong>Признак полноты размещения</strong> (<code>complete</code>)</td><td>Логический признак</td><td><code>true</code> — вся партия размещена; <code>false</code> — частичное размещение, остаток остался в зоне приёмки</td></tr>
+    <tr><td class="center">7</td><td><strong>Список проблем</strong> (<code>problems</code>)</td><td>Массив строк</td><td>Сообщения для кладовщика: «не хватило свободных ячеек (N шт. остались в приёмке)»</td></tr>
+    <tr><td class="center">8</td><td><strong>Код ответа и текст ошибки</strong></td><td>HTTP-код, строка на русском языке</td><td>При некорректных входных данных — HTTP 400 с пояснением причины</td></tr>
+  </tbody>
+</table>
+
+<h3>1.5. Бизнес-правила модуля</h3>
+<ol>
+  <li><strong>БП-1.</strong> Товар помещается в ячейку, если его габариты не превышают габариты ячейки.
+  Сравнение производится по трём сторонам после сортировки по возрастанию, что допускает поворот товара
+  на 90° и другие раскладки.</li>
+  <li><strong>БП-2.</strong> Вместимость ячейки (в штуках) равна
+  <code>min( ⌊свободная масса / масса товара⌋ , ⌊свободный объём / объём товара⌋ )</code>.
+  Дробная часть всегда отбрасывается <strong>вниз</strong>: неполная единица не размещается.</li>
+  <li><strong>БП-3.</strong> Ячейка с вместимостью 0 шт. в подбор не предлагается.</li>
+  <li><strong>БП-4.</strong> Размещение выполняется в три этапа в строго заданном порядке:
+  <em>(1)</em> докладка в занятые ячейки, где уже лежит этот же товар; <em>(2)</em> свободные ячейки
+  с тем же классом ходкости; <em>(3)</em> свободные ячейки с другим классом ходкости.</li>
+  <li><strong>БП-5.</strong> Этап 3 выполняется только в том случае, если этапы 1 и 2 не обеспечили
+  требуемое количество.</li>
+  <li><strong>БП-6.</strong> Товар с признаком «хрупкий» размещается только на 1-м и 2-м ярусах
+  (применяется к этапам 2 и 3).</li>
+  <li><strong>БП-7.</strong> В подбор не попадают ячейки в статусе <code>blocked</code> (заблокирована)
+  и <code>maintenance</code> (ремонт), а также ячейки зон приёмки и отгрузки.</li>
+  <li><strong>БП-8.</strong> Ячейка с незаполненным классом ходкости (пустое значение) не участвует
+  в подборе ни как «своя», ни как «чужая».</li>
+  <li><strong>БП-9.</strong> Свободные ячейки выдаются в порядке: сначала нижние ярусы, при равенстве —
+  ближайшие к зоне отгрузки (по расстоянию между координатами зон).</li>
+  <li><strong>БП-10.</strong> Один адрес ячейки в подборе не повторяется: каждое перемещение выполняется
+  в отдельную ячейку.</li>
+  <li><strong>БП-11.</strong> Количество единиц в позиции приёмки должно быть целым и больше нуля;
+  иначе приёмка не создаётся (HTTP 400, «Каждая позиция: товар и количество &gt; 0»).</li>
+  <li><strong>БП-12.</strong> Если суммарная вместимость выбранных ячеек меньше количества, выполняется
+  частичное размещение: остаток остаётся в зоне приёмки, приёмка сохраняет статус «подтверждена»,
+  кладовщику выдаётся сообщение о нехватке ячеек.</li>
+  <li><strong>БП-13.</strong> Размещение возможно только для приёмки, переведённой в статус
+  «подтверждена» (товар зачислен в зону приёмки).</li>
+  <li><strong>БП-14.</strong> Размер выдачи ограничен 20 ячейками — это техническое ограничение,
+  не влияющее на бизнес-логику подбора.</li>
+</ol>
+
+<h3>1.6. Справочные данные склада, использованные в тестах</h3>
+<p>Для тестирования использованы реальные данные демонстрационной базы проекта (загружаются при первом
+запуске сервера).</p>
+<table>
+  <thead>
+    <tr><th>Адрес ячейки</th><th>Зона</th><th class="center">Ярус</th><th class="center">Габариты, мм</th><th class="center">Предельная масса, кг</th><th class="center">Предельный объём, м³</th><th class="center">Класс ходкости</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><code>А1-01-1 … С3-04-3</code> (108 ячеек)</td><td>Стеллажная А / Б / В</td><td class="center">1–3</td><td class="center">1200 × 1000 × 900</td><td class="center">300</td><td class="center">1,08</td><td class="center">A / B / C</td></tr>
+    <tr><td><code>К1-01 … К1-06</code></td><td>Крупногабаритная</td><td class="center">1</td><td class="center">2600 × 1300 × 2300</td><td class="center">900</td><td class="center">7,7</td><td class="center">B</td></tr>
+    <tr><td><code>К2-01 … К2-06</code></td><td>Крупногабаритная</td><td class="center">1</td><td class="center">2600 × 1300 × 2300</td><td class="center">900</td><td class="center">7,7</td><td class="center">C</td></tr>
+    <tr><td><code>ПРИ-000</code></td><td>Зона приёмки</td><td class="center">—</td><td class="center">4000 × 2000 × 2000</td><td class="center">8000</td><td class="center">16</td><td class="center">—</td></tr>
+  </tbody>
+</table>
+
+<p><strong>Товары, использованные в тестах</strong> (реальные карточки демонстрационной базы):</p>
+<table>
+  <thead>
+    <tr><th>Наименование</th><th class="center">Габариты, мм</th><th class="center">Масса, кг</th><th class="center">Объём, м³</th><th class="center">Класс</th><th class="center">Хрупкий</th><th class="center">Помещается в</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Подушка декоративная «Вяз»</td><td class="center">450 × 450 × 120</td><td class="center">0,6</td><td class="center">0,0243</td><td class="center">A</td><td class="center">нет</td><td class="center">стеллаж</td></tr>
+    <tr><td>Стул «Венский»</td><td class="center">450 × 500 × 950</td><td class="center">7</td><td class="center">0,2137</td><td class="center">A</td><td class="center">нет</td><td class="center">стеллаж</td></tr>
+    <tr><td>Кресло «Лофт» с подлокотниками</td><td class="center">750 × 800 × 900</td><td class="center">24</td><td class="center">0,5400</td><td class="center">B</td><td class="center">нет</td><td class="center">стеллаж</td></tr>
+    <tr><td>Кресло-мешок «Груша»</td><td class="center">900 × 900 × 1000</td><td class="center">6</td><td class="center">0,8100</td><td class="center">B</td><td class="center">нет</td><td class="center">стеллаж</td></tr>
+    <tr><td>Зеркало настенное «Рама»</td><td class="center">800 × 50 × 1200</td><td class="center">12</td><td class="center">0,0480</td><td class="center">B</td><td class="center"><strong>да</strong></td><td class="center">стеллаж</td></tr>
+    <tr><td>Стол обеденный «Лофт» стекло</td><td class="center">1400 × 800 × 760</td><td class="center">42</td><td class="center">0,8512</td><td class="center">B</td><td class="center"><strong>да</strong></td><td class="center">крупногаб.</td></tr>
+    <tr><td>Люстра «Хрусталь»</td><td class="center">600 × 600 × 400</td><td class="center">6</td><td class="center">0,1440</td><td class="center">C</td><td class="center"><strong>да</strong></td><td class="center">стеллаж</td></tr>
+    <tr><td>Диван «Осло» угловой</td><td class="center">2600 × 1600 × 850</td><td class="center">105</td><td class="center">3,5360</td><td class="center">A</td><td class="center">нет</td><td class="center">крупногаб.</td></tr>
+    <tr><td>Шкаф «Классик» 2-дверный</td><td class="center">1800 × 600 × 2200</td><td class="center">95</td><td class="center">2,3760</td><td class="center">C</td><td class="center">нет</td><td class="center">крупногаб.</td></tr>
+    <tr><td>Стенка «Гранд» модульная</td><td class="center">3600 × 450 × 1800</td><td class="center">145</td><td class="center">2,9160</td><td class="center">C</td><td class="center">нет</td><td class="center"><span class="err">никуда</span></td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════ 2 ══════════════════ -->
+<h2><span class="step-num">2</span> Классы эквивалентности и граничные значения</h2>
+
+<p>Для каждого входного параметра определены классы эквивалентности (допустимые и недопустимые) и граничные
+значения. Классы эквивалентности проверяют, что внутри диапазона значения приводят к одному и тому же
+результату; граничные значения проверяют поведение системы на границах перехода между классами.</p>
+
+<h3>2.1. Параметр «Габариты товара» (длина × ширина × высота, мм)</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Класс</th><th style="width:26%">Диапазон (по наибольшей стороне)</th><th class="center" style="width:11%">Тип</th><th style="width:27%">Тестовые значения</th><th>Пример товара</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Г1</strong></td><td>1…900 мм</td><td class="center ok">доп.</td><td>100; 450; 800; <strong>900</strong></td><td>Подушка «Вяз» 450×450×120</td></tr>
+    <tr><td><strong>Г2</strong></td><td>901…1200 мм</td><td class="center ok">доп.</td><td>950; 1000; 1199; <strong>1200</strong></td><td>Стул «Венский» 450×500×950; Зеркало «Рама» 800×50×1200</td></tr>
+    <tr><td><strong>Г3</strong></td><td>1201…2600 мм</td><td class="center ok">доп.</td><td>1300; 2200; 2599; <strong>2600</strong></td><td>Диван «Осло» угловой 2600×1600×850</td></tr>
+    <tr><td><strong>Г4</strong></td><td>&gt; 2600 мм</td><td class="center err">недоп.</td><td>2601; 3200; <strong>3600</strong></td><td>Стенка «Гранд» 3600×450×1800</td></tr>
+  </tbody>
+</table>
+<p><strong>Граничные значения:</strong> 899, <strong>900</strong>, 901, 1199, <strong>1200</strong>, 1201,
+2599, <strong>2600</strong>, 2601.</p>
+<p><strong>Обоснование границ:</strong> 900 и 1200 мм — наименьшая и наибольшая стороны стеллажной ячейки
+(900 — высота, 1200 — длина); 2600 мм — длина крупногабаритной ячейки. Товар, наибольшая сторона которого
+равна границе, в ячейку помещается (сравнение нестрогое, операция <code>≤</code>).</p>
+
+<h3>2.2. Параметр «Масса товара» (кг)</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Класс</th><th style="width:30%">Диапазон</th><th class="center" style="width:11%">Тип</th><th style="width:24%">Тестовые значения</th><th>Пример и комментарий</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>М1</strong></td><td>0 &lt; m ≤ 300 кг</td><td class="center ok">доп.</td><td>0,6; 7; 24; 105; <strong>300</strong></td><td>Разместить в стеллажную ячейку можно</td></tr>
+    <tr><td><strong>М2</strong></td><td>300 &lt; m ≤ 900 кг</td><td class="center ok">доп.</td><td>301; 500; 900</td><td>Разместить можно только в крупногабаритную ячейку</td></tr>
+    <tr><td><strong>М3</strong></td><td>m &gt; 900 кг</td><td class="center err">недоп.</td><td>901; 1500</td><td>Не помещается ни в одну ячейку по грузоподъёмности</td></tr>
+    <tr><td><strong>М4</strong></td><td>m ≤ 0; нечисловое значение</td><td class="center err">недоп.</td><td>0; −5; «abc»; пусто</td><td>Приёмка не создаётся: «товар и количество &gt; 0»</td></tr>
+  </tbody>
+</table>
+<p><strong>Граничные значения:</strong> 0, 0,1; <strong>300</strong>, 300,1; <strong>900</strong>, 900,1.</p>
+
+<h3>2.3. Параметр «Класс ходкости товара»</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Класс</th><th style="width:22%">Значения</th><th class="center" style="width:11%">Тип</th><th style="width:24%">Тестовые значения</th><th>Влияние на результат</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>К1</strong></td><td><code>A</code> — быстрый оборот</td><td class="center ok">доп.</td><td>A</td><td>Приоритет — стеллажная зона А</td></tr>
+    <tr><td><strong>К2</strong></td><td><code>B</code> — средний оборот</td><td class="center ok">доп.</td><td>B</td><td>Приоритет — стеллажная зона Б и крупногабаритная К1</td></tr>
+    <tr><td><strong>К3</strong></td><td><code>C</code> — медленный оборот</td><td class="center ok">доп.</td><td>C</td><td>Приоритет — стеллажная зона В и крупногабаритная К2</td></tr>
+    <tr><td><strong>К4</strong></td><td>Иное значение или пусто</td><td class="center err">недоп.</td><td>D; пусто; «a» (строчная)</td><td>Ограничение CHECK в БД; карточка товара не сохраняется</td></tr>
+  </tbody>
+</table>
+
+<h3>2.4. Параметр «Признак хрупкости» (совместно с ярусом ячейки)</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Класс</th><th style="width:26%">Условие</th><th class="center" style="width:11%">Тип</th><th style="width:24%">Тестовые значения</th><th>Ожидаемый результат</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Х1</strong></td><td>Не хрупкий, ярус 1–3</td><td class="center ok">доп.</td><td>любой ярус 1, 2, <strong>3</strong></td><td>Ячейка любого яруса участвует в подборе</td></tr>
+    <tr><td><strong>Х2</strong></td><td>Хрупкий, ярус 1–2</td><td class="center ok">доп.</td><td>ярус <strong>2</strong></td><td>Ячейка участвует в подборе</td></tr>
+    <tr><td><strong>Х3</strong></td><td>Хрупкий, ярус 3</td><td class="center err">недоп.</td><td>ярус <strong>3</strong></td><td>Ячейка исключается из подбора; если других нет — подбор пуст</td></tr>
+  </tbody>
+</table>
+<p><strong>Граничные значения:</strong> ярус <strong>2</strong> (последний допустимый) и ярус <strong>3</strong>
+(первый недопустимый).</p>
+
+<h3>2.5. Параметр «Количество единиц» (шт.)</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Класс</th><th style="width:28%">Диапазон</th><th class="center" style="width:11%">Тип</th><th style="width:22%">Тестовые значения</th><th>Ожидаемый результат</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Кол1</strong></td><td>q = 1</td><td class="center ok">доп.</td><td><strong>1</strong></td><td>Подбирается одна ячейка</td></tr>
+    <tr><td><strong>Кол2</strong></td><td>2 ≤ q ≤ 50</td><td class="center ok">доп.</td><td>2; 5; 20; <strong>50</strong></td><td>Подбирается столько ячеек, сколько нужно для покрытия количества</td></tr>
+    <tr><td><strong>Кол3</strong></td><td>q &gt; суммарной вместимости подходящих ячеек</td><td class="center ok">доп.</td><td>100; 500</td><td>Частичное размещение; остаток остаётся в зоне приёмки</td></tr>
+    <tr><td><strong>Кол4</strong></td><td>q ≤ 0</td><td class="center err">недоп.</td><td><strong>0</strong>; −1; −5</td><td>Приёмка не создаётся: HTTP 400, «Каждая позиция: товар и количество &gt; 0»</td></tr>
+  </tbody>
+</table>
+<p><strong>Граничные значения:</strong> <strong>0</strong> (недопустимое), <strong>1</strong> (минимально
+допустимое), граница между «разместится полностью» и «частичное размещение» определяется конкретной
+вместимостью ячеек (проверяется на TC-22: 500 шт. при вместимости 5 шт.).</p>
+
+<h3>2.6. Производные параметры ячейки-кандидата</h3>
+<table>
+  <thead>
+    <tr><th style="width:8%">Класс</th><th style="width:30%">Условие</th><th class="center" style="width:11%">Тип</th><th style="width:22%">Тестовые значения</th><th>Ожидаемый результат</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Я1</strong></td><td>Статус <code>free</code> (свободна)</td><td class="center ok">доп.</td><td>free</td><td>Ячейка участвует в этапах 2 и 3</td></tr>
+    <tr><td><strong>Я2</strong></td><td>Статус <code>occupied</code> и содержит тот же товар</td><td class="center ok">доп.</td><td>occupied</td><td>Ячейка участвует только в этапе 1 (докладка)</td></tr>
+    <tr><td><strong>Я3</strong></td><td>Статус <code>blocked</code> или <code>maintenance</code></td><td class="center err">недоп.</td><td>blocked; maintenance</td><td>Ячейка полностью исключается из подбора</td></tr>
+    <tr><td><strong>Я4</strong></td><td>Класс ходкости не заполнен (пусто)</td><td class="center err">недоп.</td><td>пусто</td><td>Ячейка исключается: не «свой» и не «чужой» класс</td></tr>
+    <tr><td><strong>Я5</strong></td><td>Свободная масса &lt; массы товара</td><td class="center err">недоп.</td><td>104 кг при массе товара 105 кг</td><td>Вместимость ⌊104/105⌋ = 0, ячейка не предлагается</td></tr>
+    <tr><td><strong>Я6</strong></td><td>Свободный объём &lt; объёма товара</td><td class="center err">недоп.</td><td>0,0113 м³ при объёме товара 0,2137 м³</td><td>Вместимость ⌊…⌋ = 0, ячейка не предлагается</td></tr>
+  </tbody>
+</table>
+
+<h3>2.7. Сводная таблица граничных значений</h3>
+<table>
+  <thead>
+    <tr><th style="width:30%">Проверяемая граница</th><th class="center" style="width:13%">Нижняя</th><th class="center" style="width:13%">На границе</th><th class="center" style="width:13%">Верхняя</th><th>Где проверяется</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Наибольшая сторона товара / сторона ячейки</td><td class="center">899</td><td class="center"><strong>900</strong></td><td class="center">901</td><td>TC-02</td></tr>
+    <tr><td>Наибольшая сторона товара / длина ячейки</td><td class="center">1199</td><td class="center"><strong>1200</strong></td><td class="center">1201</td><td>TC-02</td></tr>
+    <tr><td>Длина товара / длина крупногабаритной ячейки</td><td class="center">2599</td><td class="center"><strong>2600</strong></td><td class="center">2601</td><td>TC-03, TC-04</td></tr>
+    <tr><td>Грузоподъёмность ячейки / масса товара</td><td class="center">104</td><td class="center"><strong>210</strong></td><td class="center">211</td><td>TC-15, TC-16</td></tr>
+    <tr><td>Свободный объём ячейки / объём товара</td><td class="center">0,0113</td><td class="center"><strong>0,6525</strong></td><td class="center">0,6526</td><td>TC-09, TC-10</td></tr>
+    <tr><td>Вместимость ячейки (целые штуки)</td><td class="center">4</td><td class="center"><strong>5</strong></td><td class="center">6</td><td>TC-14</td></tr>
+    <tr><td>Ярус для хрупкого товара</td><td class="center">1</td><td class="center"><strong>2</strong></td><td class="center">3</td><td>TC-05, TC-07, TC-08</td></tr>
+    <tr><td>Количество единиц в позиции приёмки</td><td class="center">0</td><td class="center"><strong>1</strong></td><td class="center">2</td><td>TC-23, TC-24</td></tr>
+  </tbody>
+</table>
+
+<h3>2.8. Трассировка: классы эквивалентности → тест-кейсы</h3>
+<table>
+  <thead>
+    <tr><th style="width:12%">Класс</th><th style="width:22%">Описание класса</th><th>Покрывающие тест-кейсы</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Г1</td><td>Наибольшая сторона ≤ 900 мм</td><td>TC-01</td></tr>
+    <tr><td>Г2</td><td>Наибольшая сторона 901…1200 мм</td><td>TC-02, TC-09, TC-10, TC-11, TC-14, TC-22</td></tr>
+    <tr><td>Г3</td><td>Наибольшая сторона 1201…2600 мм</td><td>TC-03, TC-15, TC-16</td></tr>
+    <tr><td>Г4</td><td>Наибольшая сторона &gt; 2600 мм (недопустимый)</td><td>TC-04</td></tr>
+    <tr><td>М1, М2</td><td>Масса в пределах грузоподъёмности ячейки</td><td>TC-01…TC-03, TC-09…TC-22</td></tr>
+    <tr><td>М3, М4</td><td>Масса недопустима (недопустимый класс)</td><td>TC-04, TC-15</td></tr>
+    <tr><td>К1, К2, К3</td><td>Класс ходкости A / B / C</td><td>TC-01 (A), TC-02 (B), TC-04 (C), TC-12 (A против B и C)</td></tr>
+    <tr><td>К4</td><td>Класс ходкости задан неверно (недопустимый)</td><td>TC-17 (проверяется на ячейке с пустым классом)</td></tr>
+    <tr><td>Х1</td><td>Не хрупкий, любой ярус</td><td>TC-01, TC-08, TC-21</td></tr>
+    <tr><td>Х2</td><td>Хрупкий, ярус 1–2 (допустимый)</td><td>TC-02, TC-05, TC-06</td></tr>
+    <tr><td>Х3</td><td>Хрупкий, ярус 3 (недопустимый)</td><td>TC-05, TC-07</td></tr>
+    <tr><td>Кол1</td><td>Количество 1</td><td>TC-01…TC-10, TC-12, TC-13</td></tr>
+    <tr><td>Кол2</td><td>Количество 2…50</td><td>TC-05, TC-06, TC-11, TC-19, TC-21</td></tr>
+    <tr><td>Кол3</td><td>Количество превышает вместимость</td><td>TC-19, TC-22</td></tr>
+    <tr><td>Кол4</td><td>Количество ≤ 0 (недопустимый)</td><td>TC-23, TC-24</td></tr>
+    <tr><td>Я1, Я2</td><td>Статус free / occupied с тем же товаром</td><td>TC-01, TC-09, TC-10, TC-11</td></tr>
+    <tr><td>Я3</td><td>Статус blocked (недопустимый)</td><td>TC-18</td></tr>
+    <tr><td>Я4</td><td>Класс ячейки не заполнен (недопустимый)</td><td>TC-17</td></tr>
+    <tr><td>Я5</td><td>Грузоподъёмности недостаточно (недопустимый)</td><td>TC-15, TC-16</td></tr>
+    <tr><td>Я6</td><td>Свободного объёма недостаточно (недопустимый)</td><td>TC-10</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">
+  <strong>Вывод по разделу.</strong> Все выделенные классы эквивалентности (в том числе недопустимые)
+  покрыты не менее чем одним тест-кейсом, что подтверждено таблицей трассировки 2.8.
+</div>
+
+<!-- ══════════════════ 3 ══════════════════ -->
+<h2><span class="step-num">3</span> Таблица решений</h2>
+
+<p>Таблица решений строится для основной бизнес-логики модуля — выбора стратегии размещения товара.
+<strong>Условия</strong> — входные параметры, <strong>действия</strong> — выходные значения. Правила сформулированы
+так, чтобы они были взаимно исключающими и покрывали все возможные комбинации условий.</p>
+
+<h3>3.1. Условия</h3>
+<table>
+  <thead>
+    <tr><th style="width:10%">Код</th><th style="width:34%">Условие</th><th>Проверка</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>У1</strong></td><td>Существует <strong>занятая</strong> ячейка зоны хранения, в которой уже лежит <em>этот же товар</em>, проходящая проверки по габаритам, грузоподъёмности и объёму</td><td>Поиск ячеек, где <code>status = 'occupied'</code> и <code>product_id</code> совпадает с размещаемым товаром; вместимость &gt; 0</td></tr>
+    <tr><td><strong>У2</strong></td><td>Существует <strong>свободная</strong> ячейка с классом ходкости, <em>совпадающим</em> с классом товара, и ярусом, допустимым для хрупкого товара</td><td>Поиск ячеек <code>status = 'free'</code> и <code>turnover_class =</code> класс товара; при хрупком товаре <code>level ≤ 2</code></td></tr>
+    <tr><td><strong>У3</strong></td><td>Существует <strong>свободная</strong> ячейка с классом ходкости, <em>отличным</em> от класса товара, и ярусом, допустимым для хрупкого товара</td><td>Поиск ячеек <code>status = 'free'</code> и <code>turnover_class ≠</code> класс товара</td></tr>
+  </tbody>
+</table>
+
+<h3>3.2. Действия</h3>
+<table>
+  <thead>
+    <tr><th style="width:10%">Код</th><th style="width:34%">Действие</th><th>Значение</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>Д1</strong></td><td>Стратегия размещения</td><td>Докладка / новая ячейка своего класса / новая ячейка вне класса / нет подходящих ячеек</td></tr>
+    <tr><td><strong>Д2</strong></td><td>Причина в интерфейсе (<code>reason</code>)</td><td>«докладка в ту же ячейку» / «свободна, класс X» / «вне зоны класса — по габаритам» / причина отсутствует</td></tr>
+    <tr><td><strong>Д3</strong></td><td>Результат для позиции приёмки</td><td>Размещена полностью / размещена частично (остаток в зоне приёмки)</td></tr>
+    <tr><td><strong>Д4</strong></td><td>Статус приёмки после операции</td><td>«Размещена» / «Подтверждена» (частичное размещение)</td></tr>
+  </tbody>
+</table>
+
+<h3>3.3. Таблица решений</h3>
+<table>
+  <thead>
+    <tr>
+      <th style="width:26%">Условие / Действие</th>
+      <th class="center" style="width:12%">П1</th>
+      <th class="center" style="width:12%">П2</th>
+      <th class="center" style="width:12%">П3</th>
+      <th class="center" style="width:12%">П4</th>
+      <th class="center" style="width:12%">П5</th>
+      <th class="center" style="width:12%">П6</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="rule-row"><td><strong>У1. Есть занятая ячейка с тем же товаром</strong></td>
+      <td class="center">Да</td><td class="center">Нет</td><td class="center">Нет</td><td class="center">Нет</td><td class="center">Нет</td><td class="center">Нет</td></tr>
+    <tr class="rule-row"><td><strong>У2. Есть свободная ячейка своего класса</strong></td>
+      <td class="center">—</td><td class="center">Да</td><td class="center">Нет</td><td class="center">Нет</td><td class="center">Нет</td><td class="center">Нет</td></tr>
+    <tr class="rule-row"><td><strong>У3. Есть свободная ячейка чужого класса</strong></td>
+      <td class="center">—</td><td class="center">—</td><td class="center">Да</td><td class="center">Нет</td><td class="center">Нет</td><td class="center">Нет</td></tr>
+    <tr class="rule-row"><td><strong>У4. Количество ≤ суммарной вместимости</strong></td>
+      <td class="center">Да</td><td class="center">Да</td><td class="center">Да</td><td class="center">—</td><td class="center">Нет</td><td class="center">Нет</td></tr>
+    <tr><td><strong>Д1. Стратегия размещения</strong></td>
+      <td class="center">Докладка<br>в ту же ячейку</td><td class="center">Новая ячейка<br>своего класса</td><td class="center">Новая ячейка<br>вне класса</td>
+      <td class="center err">Нет подходящих<br>ячеек</td><td class="center">Докладка +<br>новая ячейка</td><td class="center err">Нет подходящих<br>ячеек</td></tr>
+    <tr><td><strong>Д2. Причина в интерфейсе</strong></td>
+      <td class="center">«докладка в ту же ячейку»</td><td class="center">«свободна,<br>класс X»</td><td class="center">«вне зоны класса — по габаритам»</td>
+      <td class="center err">—</td><td class="center">«докладка в ту же ячейку»<br>и «свободна, класс X»</td><td class="center err">—</td></tr>
+    <tr><td><strong>Д3. Позиция приёмки</strong></td>
+      <td class="center ok">Размещена полностью</td><td class="center ok">Размещена полностью</td><td class="center ok">Размещена полностью</td>
+      <td class="center err">Остаётся в приёмке</td><td class="center ok">Размещена полностью</td><td class="center err">Размещена частично</td></tr>
+    <tr><td><strong>Д4. Статус приёмки</strong></td>
+      <td class="center">«Размещена»</td><td class="center">«Размещена»</td><td class="center">«Размещена»</td>
+      <td class="center">«Подтверждена»</td><td class="center">«Размещена»</td><td class="center">«Подтверждена»</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">
+  <strong>Пояснения к таблице.</strong><br>
+  <strong>«—»</strong> означает «значение не важно» (don't care) — условие не влияет на результат в данном правиле.<br>
+  <strong>П4</strong> и <strong>П6</strong> дают одинаковую стратегию (подбор невозможен), но различаются результатом
+  для позиции приёмки и тем, что в П6 подбор был непустым, но не покрыл количество. Такое разделение
+  необходимо, чтобы отличить «ячеек нет вообще» (П4) от «ячейки есть, но их мало» (П6) — эти ситуации требуют
+  разных действий кладовщика.<br>
+  Правила <strong>взаимно исключающие</strong>: для любой комбинации условий подходит ровно одно правило.
+  Они <strong>полны</strong>: покрывают все 2 × 2 × 2 = 8 комбинаций условий У1–У3.
+</div>
+
+<h3>3.4. Соответствие правил тест-кейсам</h3>
+<table>
+  <thead>
+    <tr><th style="width:10%">Правило</th><th style="width:28%">Ситуация</th><th>Проверяющие тест-кейсы</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><strong>П1</strong></td><td>Докладка, количество помещается целиком</td><td>TC-09, TC-10</td></tr>
+    <tr><td><strong>П2</strong></td><td>Новая ячейка своего класса</td><td>TC-01, TC-02, TC-05, TC-06, TC-08, TC-14, TC-19, TC-20, TC-21</td></tr>
+    <tr><td><strong>П3</strong></td><td>Новая ячейка вне класса</td><td>TC-03, TC-12, TC-16, TC-17</td></tr>
+    <tr><td><strong>П4</strong></td><td>Подходящих ячеек нет</td><td>TC-04, TC-07, TC-13, TC-15, TC-18</td></tr>
+    <tr><td><strong>П5</strong></td><td>Докладка плюс новая ячейка</td><td>TC-11</td></tr>
+    <tr><td><strong>П6</strong></td><td>Ячейки есть, но количества не хватает</td><td>TC-22, TC-28</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════ 4 ══════════════════ -->
+<h2><span class="step-num">4</span> Попарное тестирование (Pairwise)</h2>
+
+<p>Полный перебор комбинаций входных параметров даёт <strong>2<sup>5</sup> = 32</strong> варианта, что избыточно:
+в большинстве случаев дефект проявляется уже при взаимодействии <em>двух</em> параметров. Попарный метод
+проверяет все сочетания значений <em>каждой пары</em> параметров, сокращая объём проверок.</p>
+
+<h3>4.1. Параметры и их значения</h3>
+<table>
+  <thead>
+    <tr><th style="width:6%">№</th><th style="width:34%">Параметр</th><th class="center" style="width:22%">Значение 0</th><th class="center" style="width:22%">Значение 1</th><th>Источник значения</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="center">П1</td><td>Наличие свободной ячейки своего класса, проходящей все проверки</td><td class="center">есть</td><td class="center">нет</td><td>Состояние склада</td></tr>
+    <tr><td class="center">П2</td><td>Наличие свободной ячейки другого класса, проходящей все проверки</td><td class="center">есть</td><td class="center">нет</td><td>Состояние склада</td></tr>
+    <tr><td class="center">П3</td><td>Наличие занятой ячейки с тем же товаром (возможна докладка)</td><td class="center">есть</td><td class="center">нет</td><td>Состояние склада</td></tr>
+    <tr><td class="center">П4</td><td>Признак «хрупкий» у товара</td><td class="center">нет</td><td class="center">да</td><td>Карточка товара</td></tr>
+    <tr><td class="center">П5</td><td>Габариты товара: помещается в стеллажную ячейку</td><td class="center">да</td><td class="center">нет</td><td>Карточка товара</td></tr>
+  </tbody>
+</table>
+
+<h3>4.2. Обоснование минимальности набора</h3>
+<p>Всего нужно покрыть 5 · 4 = <strong>20 пар параметров</strong>, в каждой паре — 2 · 2 = 4 сочетания значений,
+то есть <strong>80 уникальных пар значений</strong>. Любая строка набора покрывает ровно
+C(5, 2) = 10 таких пар. Следовательно, нижняя граница набора: 80 / 10 = <strong>8 строк</strong>.</p>
+<p>Ниже приведён набор из <strong>8 комбинаций</strong> — теоретически минимальный. Он построен как
+ортогональный массив силы 2 и гарантированно покрывает все 20 пар параметров.</p>
+
+<h3>4.3. Набор попарных комбинаций</h3>
+<table>
+  <thead>
+    <tr>
+      <th class="center" style="width:5%">№</th>
+      <th class="center" style="width:12%">П1. Ячейка своего класса</th>
+      <th class="center" style="width:12%">П2. Ячейка чужого класса</th>
+      <th class="center" style="width:12%">П3. Докладка</th>
+      <th class="center" style="width:9%">П4. Хрупкий</th>
+      <th class="center" style="width:11%">П5. В стеллаж</th>
+      <th>Тестовая ситуация (пример товара и склада)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td class="center">1</td><td class="center ok">есть</td><td class="center ok">есть</td><td class="center ok">есть</td><td class="center">нет</td><td class="center ok">да</td>
+      <td>Стул «Венский» (A, не хрупкий); свободны стеллажные ячейки A, B и C; в A1-01-1 уже 2 шт. этого товара</td></tr>
+    <tr><td class="center">2</td><td class="center ok">есть</td><td class="center ok">есть</td><td class="center err">нет</td><td class="center">нет</td><td class="center err">нет</td>
+      <td>Шкаф «Классик» (C, 1800×600×2200); свободны крупногабаритные ячейки К2 (свой класс) и К1 (чужой класс)</td></tr>
+    <tr><td class="center">3</td><td class="center ok">есть</td><td class="center err">нет</td><td class="center ok">есть</td><td class="center err">да</td><td class="center ok">да</td>
+      <td>Зеркало «Рама» (B, хрупкий, 800×50×1200); свободны только B1-01-1 и B1-01-2; в B1-01-2 лежит этот товар</td></tr>
+    <tr><td class="center">4</td><td class="center ok">есть</td><td class="center err">нет</td><td class="center err">нет</td><td class="center err">да</td><td class="center err">нет</td>
+      <td>Лампа торшер «Ткань» (C, хрупкий, 350×350×1600); свободна только К2-01 (свой класс), докладки нет</td></tr>
+    <tr><td class="center">5</td><td class="center err">нет</td><td class="center ok">есть</td><td class="center ok">есть</td><td class="center err">да</td><td class="center err">нет</td>
+      <td>Стол «Лофт» стекло (B, хрупкий, 1400×800×760); свободна только К1-01 (чужой класс), там же лежит этот товар</td></tr>
+    <tr><td class="center">6</td><td class="center err">нет</td><td class="center ok">есть</td><td class="center err">нет</td><td class="center err">да</td><td class="center ok">да</td>
+      <td>Люстра «Хрусталь» (C, хрупкий, 600×600×400); свободны только B1-01-1 и B2-01-1 (чужой класс)</td></tr>
+    <tr><td class="center">7</td><td class="center err">нет</td><td class="center err">нет</td><td class="center ok">есть</td><td class="center">нет</td><td class="center err">нет</td>
+      <td>Диван «Честер» кожаный (C, 2100×950×880); свободных ячеек нет, но в К2-03 лежит этот товар</td></tr>
+    <tr><td class="center">8</td><td class="center err">нет</td><td class="center err">нет</td><td class="center err">нет</td><td class="center">нет</td><td class="center ok">да</td>
+      <td>Стул «Венский» (A, не хрупкий); свободных ячеек нет вообще → частичное размещение</td></tr>
+  </tbody>
+</table>
+
+<h3>4.4. Проверка покрытия пар</h3>
+<table>
+  <thead>
+    <tr><th style="width:22%">Пара параметров</th><th style="width:44%">Проверенные сочетания значений</th><th class="center" style="width:16%">Покрыто</th><th class="center">Статус</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>П1 × П2</td><td>(есть,есть) (есть,нет) (нет,есть) (нет,нет)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П1 × П3</td><td>(есть,есть) (есть,нет) (нет,есть) (нет,нет)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П1 × П4</td><td>(есть,нет) (есть,да) (нет,нет) (нет,да)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П1 × П5</td><td>(есть,да) (есть,нет) (нет,нет) (нет,да)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П2 × П3</td><td>(есть,есть) (есть,нет) (нет,есть) (нет,нет)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П2 × П4</td><td>(есть,нет) (есть,да) (нет,нет) (нет,да)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П2 × П5</td><td>(есть,да) (есть,нет) (нет,нет) (нет,да)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П3 × П4</td><td>(есть,нет) (есть,да) (нет,нет) (нет,да)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П3 × П5</td><td>(есть,да) (есть,нет) (нет,да) (нет,нет)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr><td>П4 × П5</td><td>(нет,да) (нет,нет) (да,да) (да,нет)</td><td class="center">4 из 4</td><td class="center ok">✔</td></tr>
+    <tr class="total-row"><td>Итого</td><td>20 пар параметров, 80 сочетаний значений</td><td class="center">80 из 80</td><td class="center ok">✔</td></tr>
+  </tbody>
+</table>
+
+<div class="tip">
+  <strong>Результат.</strong> Набор из 8 комбинаций покрывает все 20 пар параметров и все 80 сочетаний их значений,
+  при этом объём проверок сокращён с 32 до 8 — в 4 раза. Каждая строка набора привязана к конкретному
+  тест-кейсу раздела 5, а значит, все комбинации реально исполнены на системе.
+</div>
+
+<!-- ══════════════════ 5 ══════════════════ -->
+<h2 class="pb"><span class="step-num">5</span> Тест-кейсы</h2>
+
+<div class="info">
+  <p><strong>Всего разработано и выполнено 29 тест-кейсов</strong> (требование задания — не менее 15).</p>
+  <p><strong>Условия выполнения:</strong> тестирование проводилось на рабочем коде проекта — серверной части
+  ИС «Склад» (Node.js 24, Express 4, СУБД SQLite) с загруженными демонстрационными данными.
+  TC-01…TC-22 проверяли функцию подбора ячеек напрямую, TC-23…TC-29 — через программный интерфейс (API)
+  приёмочного сценария «приёмка → подтверждение → размещение».</p>
+  <p><strong>Обозначения статуса:</strong> <span class="ok">Pass</span> — фактический результат совпал
+  с ожидаемым; <span class="err">Fail</span> — расхождение.</p>
+</div>
+
+<h3>5.1. Сводная таблица тест-кейсов</h3>
+<table>
+  <thead>
+    <tr><th class="center" style="width:8%">ID</th><th>Название</th><th class="center" style="width:14%">Метод</th><th class="center" style="width:10%">Статус</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="center">TC-01</td><td>Базовый подбор в свободную ячейку своего класса ходкости</td><td class="center">Эквивалентность Г1, К1</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-02</td><td>Граничный размер: наибольшая сторона 1200 мм равна стороне ячейки</td><td class="center">Граница 900/1200</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-03</td><td>Граничный размер: длина 2600 мм равна длине крупногабаритной ячейки</td><td class="center">Граница 2600</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-04</td><td>Габариты товара превышают габариты всех ячеек склада</td><td class="center">Недоп. Г4, П4</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-05</td><td>Хрупкий товар не размещается на 3-м ярусе</td><td class="center">Недоп. Х3</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-06</td><td>Хрупкий товар при свободных ярусах 1 и 2 размещается полностью</td><td class="center">Доп. Х2</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-07</td><td>Хрупкий товар при единственной свободной ячейке 3-го яруса</td><td class="center">Недоп. Х3, П4</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-08</td><td>Нехрупкий товар допускается на 3-й ярус</td><td class="center">Доп. Х1</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-09</td><td>Докладка товара в занятую ячейку с тем же товаром</td><td class="center">Таблица решений П1</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-10</td><td>Докладка отклонена: свободного объёма недостаточно</td><td class="center">Недоп. Я6</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-11</td><td>Докладка плюс размещение остатка в новые ячейки</td><td class="center">Таблица решений П5</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-12</td><td>Нет ячеек своего класса — подбор ячейки другого класса</td><td class="center">Таблица решений П3</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-13</td><td>Нет ни одной свободной ячейки</td><td class="center">Таблица решений П4</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-14</td><td>Вместимость ячейки округляется вниз</td><td class="center">Граница вместимости</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-15</td><td>Грузоподъёмности ячейки недостаточно для одной единицы</td><td class="center">Недоп. Я5</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-16</td><td>Граница грузоподъёмности: ровно две единицы помещаются</td><td class="center">Граница массы</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-17</td><td>Ячейка зоны хранения с незаполненным классом ходкости</td><td class="center">Недоп. К4, Я4</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-18</td><td>Заблокированная ячейка не участвует в подборе</td><td class="center">Недоп. Я3</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-19</td><td>Сборный груз размещается в несколько ячеек</td><td class="center">Кол2, Кол3</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-20</td><td>Приоритет своей ячейки над ячейкой другого класса</td><td class="center">Таблица решений П2</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-21</td><td>Порядок выдачи: нижние ярусы, затем ближайшие к зоне отгрузки</td><td class="center">БП-9</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-22</td><td>Количество превышает суммарную вместимость ячеек</td><td class="center">Кол3, П6</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-23</td><td>Частичное размещение — понятный отчёт кладовщику</td><td class="center">БП-12</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-24</td><td>Количество единиц равно нулю</td><td class="center">Недоп. Кол4</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-25</td><td>Отрицательное количество единиц</td><td class="center">Недоп. Кол4</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-26</td><td>Пустой список позиций приёмки</td><td class="center">Валидация</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-27</td><td>Не указан поставщик приёмки</td><td class="center">Валидация</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-28</td><td>Размещение до подтверждения приёмки</td><td class="center">БП-13</td><td class="center ok">Pass</td></tr>
+    <tr><td class="center">TC-29</td><td>Повторное размещение полностью размещённой приёмки</td><td class="center">Идемпотентность</td><td class="center ok">Pass</td></tr>
+    <tr class="total-row"><td class="center">29</td><td>Итого: выполнено тест-кейсов</td><td class="center">—</td><td class="center ok">29 Pass / 0 Fail</td></tr>
+  </tbody>
+</table>
+
+<h3 class="pb">5.2. Тест-кейсы (подробное описание)</h3>
+
+<!-- ─── TC-01 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-01 · Базовый подбор в свободную ячейку своего класса ходкости <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Сервер запущен, база данных содержит демонстрационные данные. Все стеллажные и крупногабаритные ячейки имеют статус «свободна», остатков товара нет.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора ячеек для товара «Подушка декоративная «Вяз», количество 1.<br>2. Получить список ячеек и их параметры.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Подушка «Вяз»: 450 × 450 × 120 мм, 0,6 кг, объём 0,0243 м³, класс ходкости A, не хрупкая. Количество: <strong>1 шт.</strong></td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Подобрана свободная стеллажная ячейка класса A. В списке указана причина «свободна, класс A». Вместимость ячейки рассчитана как ⌊1,08 / 0,0243⌋ = <strong>44 шт.</strong></td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобрана ячейка <code>A1-01-1</code> (ярус 1), вместимость 44 шт., причина «свободна, класс A». Результат совпал с ожидаемым.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-02 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-02 · Граничный размер: наибольшая сторона товара 1200 мм равна наименьшей стороне ячейки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободны только стеллажные ячейки B1-01-1, B1-01-2, B1-01-3 (класс B); крупногабаритные ячейки К1, К2 заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для зеркала настенного «Рама», количество 1.<br>2. Проверить, подходит ли товар в ячейку 1200 × 1000 × 900 мм.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Зеркало «Рама»: 800 × 50 × 1200 мм, 12 кг, объём 0,0480 м³, класс B, <strong>хрупкое</strong>. Количество: 1 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Наибольшая сторона товара 1200 мм равна длине ячейки 1200 мм — сравнение нестрогое, товар помещается. Подобрана стеллажная ячейка класса B на ярусе 1 (хрупкий товар на 3-й ярус не допускается). Вместимость ⌊1,08 / 0,048⌋ = <strong>22 шт.</strong></td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобрана ячейка <code>B1-01-1</code> (ярус 1), вместимость 22 шт., причина «свободна, класс B». Товар размещён на граничном размере — дефект не выявлен.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-03 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-03 · Граничный размер: длина товара 2600 мм равна длине крупногабаритной ячейки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Все ячейки свободны. В крупногабаритной зоне ячейки К1 имеют класс ходкости B, К2 — класс C.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для дивана «Осло» угловой, количество 1.<br>2. Проверить, куда размещён товар класса A, если ячеек класса A такого размера нет.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Диван «Осло» угловой: 2600 × 1600 × 850 мм, 105 кг, объём 3,5360 м³, класс A, не хрупкий. Количество: 1 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Длина 2600 мм равна длине крупногабаритной ячейки — товар помещается. В стеллажные ячейки не помещается (1600 мм > 1200 мм). Крупногабаритные ячейки имеют класс B и C, а товар имеет класс A, поэтому выбрана стратегия «вне зоны класса». Вместимость ⌊7,7 / 3,536⌋ = <strong>2 шт.</strong></td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобрана ячейка <code>К1-01</code> (ярус 1), вместимость 2 шт., причина «вне зоны класса — по габаритам». Результат совпал с ожидаемым.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-04 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-04 · Габариты товара превышают габариты всех ячеек склада <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Все ячейки склада свободны — ни одна не может быть отброшена по причине занятости.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стенки «Гранд» модульной, количество 1.<br>2. Проверить поведение системы, когда подходящих ячеек не существует вовсе.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стенка «Гранд» модульная: 3600 × 450 × 1800 мм, 145 кг, объём 2,9160 м³, класс C. Количество: 1 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Ни одна ячейка не подходит (3600 мм &gt; 2600 мм — наибольшая сторона самой большой ячейки). Функция возвращает <strong>пустой список</strong> без исключения. Позиция остаётся в зоне приёмки, кладовщику выдаётся сообщение «не хватило свободных ячеек».</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Возвращён пустой список, аварийного завершения не произошло. Правило таблицы решений П4 подтверждено.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-05 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-05 · Хрупкий товар не размещается на 3-м ярусе <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободны три стеллажные ячейки класса B: B1-01-1 (ярус 1), B1-01-2 (ярус 2), B1-01-3 (ярус 3). Остальные ячейки заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для зеркала настенного «Рама», количество 30 шт.<br>2. Проверить, попадёт ли в подбор ячейка 3-го яруса.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Зеркало «Рама»: класс B, <strong>хрупкое</strong>. Количество: 30 шт. (подобрано 2 ячейки по 22 шт. = 44 шт. ≥ 30).</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Для хрупкого товара допускаются только ярусы 1 и 2. Ячейка B1-01-3 (ярус 3) в подбор <strong>не попадает</strong>, даже несмотря на то, что она свободна и имеет нужный класс ходкости.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобраны ячейки <code>B1-01-1</code> и <code>B1-01-2</code> (по 22 шт.), ярус 3 в подбор не попал. Недопустимый класс Х3 отсечён корректно.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-06 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-06 · Хрупкий товар при свободных ярусах 1 и 2 размещается полностью <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободны только ячейки B1-01-1 (ярус 1) и B1-01-2 (ярус 2). Ячейка B1-01-3 (ярус 3) занята.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для зеркала настенного «Рама», количество 30 шт.<br>2. Проверить полноту размещения партии.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Зеркало «Рама»: класс B, хрупкое. Количество: 30 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Обе свободные ячейки подходят. Суммарная вместимость 22 + 22 = 44 шт. ≥ 30 шт., поэтому партия размещается полностью, остатка нет.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобраны обе ячейки <code>B1-01-1</code> и <code>B1-01-2</code>, вместимость каждой 22 шт. Размещение признано полным.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-07 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-07 · Хрупкий товар при единственной свободной ячейке 3-го яруса <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободна единственная ячейка C1-01-3 (класс C, ярус 3). Все остальные ячейки заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для люстры «Хрусталь», количество 1.<br>2. Проверить, будет ли система предлагать ячейку 3-го яруса для хрупкого товара.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Люстра «Хрусталь»: 600 × 600 × 400 мм, 6 кг, класс C, <strong>хрупкая</strong>. Количество: 1 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Единственная свободная ячейка отклоняется по признаку «хрупкий» на этапах 2 и 3. Функция возвращает <strong>пустой список</strong>. Правило таблицы решений П4.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Возвращён пустой список. Ограничение по ярусу для хрупкого товара работает в обе стороны — не только исключает лишние ячейки, но и приводит к отказу.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-08 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-08 · Нехрупкий товар допускается на 3-м ярусе <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Администратор снял признак «хрупкий» в карточке люстры «Хрусталь». Свободна только ячейка C1-01-3 (ярус 3).</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Снять признак «хрупкий» у товара.<br>2. Вызвать функцию подбора для люстры, количество 1.<br>3. Сравнить результат с TC-07.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Люстра «Хрусталь»: класс C, <strong>не хрупкая</strong>. Количество: 1 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Ограничение по ярусу не применяется, ячейка C1-01-3 подходит. Вместимость ⌊1,08 / 0,144⌋ = <strong>7 шт.</strong>, причина «свободна, класс C».</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобрана ячейка <code>C1-01-3</code> (ярус 3), вместимость 7 шт., причина «свободна, класс C». Результат противоположен TC-07 при прочих равных условиях — признак хрупкости является значимым параметром.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-09 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-09 · Докладка товара в занятую ячейку с тем же товаром <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>В ячейке A1-01-1 (класс A, ярус 1) уже находится 2 стула «Венский». Ячейка имеет статус «занята». Все остальные ячейки свободны.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский», количество 1.<br>2. Проверить, какая ячейка стоит первой в списке и каковы её параметры.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский»: 450 × 500 × 950 мм, 7 кг, объём 0,2137 м³, класс A, не хрупкий. В A1-01-1 занято 14 кг / 0,4275 м³. Количество: 1 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Срабатывает первый этап (докладка). A1-01-1 предлагается первой с причиной «докладка в ту же ячейку». Вместимость: свободно 0,6525 м³, ⌊0,6525 / 0,2137⌋ = <strong>3 шт.</strong></td></tr>
+    <tr><td class="k">Фактический результат</td><td>Первой в списке ячейка <code>A1-01-1</code>, вместимость 3 шт., причина «докладка в ту же ячейку»; второй — свободная ячейка A1-02-1 с приоритетным статусом. Правило таблицы решений П1 подтверждено.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-10 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-10 · Докладка отклонена: свободного объёма ячейки недостаточно <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>В ячейке A1-01-1 уже находится 5 стульев «Венский» (объём 1,0688 м³ при предельном 1,08 м³). Все остальные ячейки свободны.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский», количество 1.<br>2. Проверить, будет ли A1-01-1 исключена из подбора несмотря на наличие того же товара.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», 1 шт. Свободный объём A1-01-1: 1,08 − 1,0688 = 0,0112 м³ &lt; 0,2137 м³.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Вместимость A1-01-1 = ⌊0,0112 / 0,2137⌋ = <strong>0 шт.</strong> По бизнес-правилу БП-3 ячейка с нулевой вместимостью в подбор <strong>не предлагается</strong>. Система должна перейти к свободной ячейке своего класса.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Ячейка A1-01-1 в подбор не попала. Предложена свободная ячейка <code>A1-02-1</code> с причиной «свободна, класс A», вместимость 5 шт.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-11 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-11 · Докладка плюс размещение остатка в новые ячейки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>В ячейке A1-01-1 находится 2 стула «Венский» (вместимость докладки 3 шт.). Все остальные ячейки свободны.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский», количество 5 шт.<br>2. Проверить, покрывается ли количество комбинацией двух стратегий.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», принято <strong>5 шт.</strong>, из них 3 шт. можно докладить в A1-01-1.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Первая ячейка — A1-01-1 с причиной «докладка в ту же ячейку» (3 шт.). Остаток 2 шт. размещается во второй свободной ячейке класса A. Правило таблицы решений П5.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобраны две ячейки: <code>A1-01-1</code> (3 шт., «докладка в ту же ячейку») и <code>A1-02-1</code> (5 шт., «свободна, класс A»). Комбинирование стратегий работает корректно.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-12 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-12 · Нет свободных ячеек своего класса — подбор ячейки другого класса <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Все ячейки класса A заняты. Свободны только B1-01-1 (класс B) и C1-01-1 (класс C).</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский» (класс A), количество 1.<br>2. Проверить, какая стратегия применяется и какая ячейка выбрана.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», класс ходкости <strong>A</strong>. Свободны ячейки классов B и C.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Этапы 1 и 2 не дают результата, применяется этап 3. Причина выбора — «вне зоны класса — по габаритам». Из двух ячеек выбирается ближайшая к зоне отгрузки: расстояние до стеллажной Б (2,24) меньше, чем до стеллажной В (2,83).</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобрана ячейка <code>B1-01-1</code>, вместимость 5 шт., причина «вне зоны класса — по габаритам». Правило таблицы решений П3 подтверждено.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-13 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-13 · Нет ни одной свободной ячейки — частичное размещение <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Все стеллажные и крупногабаритные ячейки имеют статус «занята». Товара в приёмке нет.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский», количество 1.<br>2. Проверить поведение системы при полностью занятом складе.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», 1 шт.; свободных ячеек нет ни одной.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Все три этапа не дают результата. Возвращается пустой список. Позиция остаётся в зоне приёмки, приёмка сохраняет статус «подтверждена», в журнале операций фиксируется «частичное размещение».</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Возвращён пустой список. Сценарий частичного размещения (правило П4 / П6) подтверждён на уровне функции подбора.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-14 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-14 · Вместимость ячейки округляется вниз <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободна только ячейка A1-01-1 (1200 × 1000 × 900 мм, 300 кг, 1,08 м³).</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский», количество 5 шт.<br>2. Проверить расчёт вместимости и отсутствие «неполной» единицы.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский»: объём 0,2137 м³, масса 7 кг. Количество: <strong>5 шт.</strong></td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Вместимость по объёму: 1,08 / 0,2137 = 5,05 → <strong>5 шт.</strong> (дробная часть отбрасывается). Вместимость по массе: 300 / 7 = 42 шт. Итог: min(42, 5) = 5 шт. Шестая единица заняла бы 1,2822 м³, что превышает 1,08 м³, поэтому не предлагается.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Вместимость указана как 5 шт. Правило БП-2 (округление вниз) выполняется — неполная единица не размещается.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-15 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-15 · Грузоподъёмности ячейки недостаточно даже для одной единицы <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободна только ячейка К2-01. Администратор изменил её предельную массу с 900 кг на <strong>104 кг</strong>.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Изменить предельную массу ячейки К2-01 на 104 кг.<br>2. Вызвать функцию подбора для дивана «Осло» угловой, количество 1.<br>3. Проверить поведение системы.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Диван «Осло» угловой: масса 105 кг, объём 3,5360 м³. Предельная масса ячейки: 104 кг.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Товар тяжелее ячейки на 1 кг. Вместимость ⌊104 / 105⌋ = <strong>0 шт.</strong> Ячейка не предлагается, список пуст. Проверяется нижняя граница условия «масса товара ≤ предельная масса ячейки».</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Возвращён пустой список — ячейка К2-01 отброшена. Перегрузка ячейки предотвращена, что является главным риском модуля.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-16 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-16 · Граница грузоподъёмности: ровно две единицы помещаются <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободна только ячейка К2-01. Предельная масса изменена на <strong>210 кг</strong>.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Изменить предельную массу ячейки К2-01 на 210 кг.<br>2. Вызвать функцию подбора для дивана «Осло» угловой, количество 1.<br>3. Сравнить с TC-15.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Диван «Осло» угловой: 105 кг, 3,5360 м³. Предельная масса ячейки: 210 кг = 2 × 105.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>⌊210 / 105⌋ = <strong>2 шт.</strong> Двойная единица в ячейку помещается, тройная — нет. Ограничение по объёму даёт ⌊7,7 / 3,536⌋ = 2 шт. Итоговая вместимость 2 шт.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобрана ячейка <code>К2-01</code>, вместимость 2 шт. Граница грузоподъёмности обрабатывается корректно.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-17 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-17 · Ячейка зоны хранения с незаполненным классом ходкости <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>У ячейки A2-01-1 (зона хранения, класс A) <strong>не заполнен</strong> класс ходкости. Свободна также ячейка B1-01-1. Остальные ячейки заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Очистить поле «Класс ходкости» у ячейки A2-01-1.<br>2. Вызвать функцию подбора для стула «Венский», количество 1.<br>3. Проверить, попадёт ли A2-01-1 в подбор.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», класс A. Ячейка A2-01-1: класс ходкости пуст. Ячейка B1-01-1: класс B.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>По бизнес-правилу БП-8 ячейка с пустым классом ходкости не участвует в подборе: она не совпадает с классом товара (значит, не «своя»), но и формально не отличается от него (значит, не «чужая»). Подбор должен перейти к ячейке B1-01-1 с причиной «вне зоны класса».</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Ячейка A2-01-1 в подбор не попала. Подобрана ячейка <code>B1-01-1</code>, вместимость 5 шт., причина «вне зоны класса — по габаритам». Дефект не выявлен.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-18 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-18 · Заблокированная ячейка не участвует в подборе <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Единственная свободная ячейка A1-01-1 переведена в статус «заблокирована» (администратор исключил её из работы). Остальные ячейки заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Перевести ячейку A1-01-1 в статус «заблокирована».<br>2. Вызвать функцию подбора для стула «Венский», количество 1.<br>3. Проверить, исключена ли заблокированная ячейка.</td></tr>
+    <tr><td class="k">Тестовые данных</td><td>Стул «Венский», 1 шт. Статус ячейки A1-01-1: <code>blocked</code>.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>По бизнес-правилу БП-7 ячейки в статусе «заблокирована» и «ремонт» полностью исключаются из подбора. Возвращается пустой список.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Возвращён пустой список. Заблокированная ячейка в подбор не попала — риск размещения товара в нерабочую ячейку отсутствует.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-19 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-19 · Сборный груз размещается в несколько ячеек <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободны ячейки B1-01-1, B1-01-2, B1-01-3. Остальные заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для кресла-мешка «Груша», количество 2 шт.<br>2. Проверить, что подобраны разные ячейки и вместимость каждой рассчитана верно.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Кресло-мешок «Груша»: 900 × 900 × 1000 мм, 6 кг, объём 0,8100 м³, класс B, не хрупкий. Количество: <strong>2 шт.</strong></td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Вместимость ячейки: ⌊1,08 / 0,81⌋ = <strong>1 шт.</strong> Для размещения 2 единиц должны быть подобраны <strong>две разные ячейки</strong> (бизнес-правило БП-10).</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Подобраны две разные ячейки: <code>B1-01-1</code> и <code>B1-01-2</code>, вместимость каждой 1 шт. Адрес в подборе не повторяется.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-20 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-20 · Приоритет своей ячейки над ячейкой другого класса <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободны две ячейки: A1-01-1 (класс A — «своя») и B1-01-1 (класс B — «чужая»). Остальные заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский» (класс A), количество 1 шт.<br>2. Проверить, какие ячейки попали в подбор.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», класс A. Свободны A1-01-1 (свой класс) и B1-01-1 (чужой класс).</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>По бизнес-правилу БП-5 этап 3 выполняется только при нехватке ячеек этапа 2. Здесь своя ячейка есть и её достаточно, поэтому <strong>B1-01-1 в подбор не попадает</strong> — система не перемещает быстрооборачиваемый товар в зону другого класса без необходимости.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>В подбор попала только ячейка <code>A1-01-1</code> с приоритетной причиной «свободна, класс A». Приоритет классов ходкости соблюдён.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-21 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-21 · Порядок выдачи ячеек: сначала нижние ярусы, затем ближайшие к зоне отгрузки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободны четыре ячейки класса B: К1-01 (крупногабаритная, ярус 1, расстояние до зоны отгрузки 1,41), B1-01-1 (стеллажная, ярус 1, расстояние 2,24), B1-01-2 (ярус 2), B1-01-3 (ярус 3). Остальные заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для кресла «Лофт» с подлокотниками, количество 20 шт.<br>2. Зафиксировать порядок ячеек в ответе.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Кресло «Лофт»: 750 × 800 × 900 мм, 24 кг, объём 0,5400 м³, класс B, не хрупкий. Количество: <strong>20 шт.</strong></td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>По бизнес-правилу БП-9 ячейки выдаются по возрастанию яруса, а при равенстве — по возрастанию расстояния до зоны отгрузки. Ожидаемый порядок: <strong>К1-01 → B1-01-1 → B1-01-2 → B1-01-3</strong> (К1-01 и B1-01-1 оба на 1-м ярусе, но К1-01 ближе к отгрузке).</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Порядок: <code>К1-01</code> (14 шт.) → <code>B1-01-1</code> (2 шт.) → <code>B1-01-2</code> (2 шт.) → <code>B1-01-3</code> (2 шт.). Порядок выдачи полностью соответствует ожидаемому — маршрут кладовщика оптимален.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-22 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-22 · Количество превышает суммарную вместимость выбранных ячеек <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Свободна только ячейка A1-01-1 (вместимость 5 шт.). Остальные ячейки заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Вызвать функцию подбора для стула «Венский», количество 500 шт.<br>2. Проверить объём возвращённого списка и рассчитанную вместимость.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Стул «Венский», принято <strong>500 шт.</strong>; единственная свободная ячейка вмещает 5 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Подбор не пуст: предлагается одна ячейка вместимостью 5 шт. Размещается 5 шт., <strong>495 шт. остаются в приёмке</strong> — частичное размещение. Правило таблицы решений П6.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Возвращена ячейка <code>A1-01-1</code> с вместимостью 5 шт. Подбор завершается без ошибки; поведение подтверждено на следующем уровне в TC-23.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-23 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-23 · Частичное размещение — понятный отчёт кладовщику <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Пользователь авторизован с ролью «Кладовщик». Свободна только ячейка A1-01-1 (вместимость 5 шт.), остальные ячейки заняты.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Создать приёмку: поставщик ООО «МебельПром», позиция — стул «Венский», 500 шт.<br>2. Подтвердить приёмку (товар зачисляется в зону приёмки ПРИ-000).<br>3. Выполнить действие «Разместить».<br>4. Прочитать ответ сервера и статус приёмки.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>POST /api/receipts → POST /api/receipts/{id}/confirm → POST /api/receipts/{id}/place. Позиция: Стул «Венский», 500 шт.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Ответ: <code>complete = false</code>; перемещено 5 шт. в ячейку A1-01-1; в списке <code>problems</code> — сообщение «не хватило свободных ячеек (495 шт. остались в приёмке)». Статус приёмки — «подтверждена». Поле <code>placed</code> позиции равно 5 при <code>quantity</code> = 500.</td></tr>
+    <tr><td class="k">Фактический результат</td><td><code>complete=false</code>, перемещений 1 (A1-01-1 × 5 шт.), <code>problems</code>: «Стул «Венский»: не хватило свободных ячеек (495 шт. остались в приёмке)», статус приёмки «confirmed», размещено 5 из 500. Сообщение на русском языке понятно кладовщику и содержит точное количество остатка.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-24 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-24 · Количество единиц равно нулю <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Пользователь авторизован с ролью «Кладовщик».</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Открыть форму новой приёмки.<br>2. Указать поставщика, добавить позицию «Стул «Венский»» с количеством 0.<br>3. Сохранить приёмку.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>POST /api/receipts, supplier: «ООО «МебельПром»», items: [{ productId: &lt;стул «Венский»&gt;, quantity: <strong>0</strong> }]</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Сервер отклоняет запрос: HTTP <strong>400</strong>, сообщение «Каждая позиция: товар и количество &gt; 0». Приёмка не создаётся, состояние склада не изменяется.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>HTTP 400, «Каждая позиция: товар и количество &gt; 0». Ограничение на уровне сервера работает: недопустимые данные отсекаются даже при обходе клиентской проверки.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-25 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-25 · Отрицательное количество единиц <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Пользователь авторизован с ролью «Кладовщик».</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Открыть форму новой приёмки.<br>2. Добавить позицию «Стул «Венский»» с количеством −5.<br>3. Сохранить приёмку.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>POST /api/receipts, items: [{ productId: &lt;стул «Венский»&gt;, quantity: <strong>−5</strong> }]</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>HTTP <strong>400</strong>, сообщение «Каждая позиция: товар и количество &gt; 0». Отрицательное количество недопустимо (недопустимый класс Кол4) — защита от уменьшения остатков.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>HTTP 400, «Каждая позиция: товар и количество &gt; 0». Результат совпал с ожидаемым.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-26 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-26 · Пустой список позиций приёмки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Пользователь авторизован с ролью «Кладовщик».</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Открыть форму новой приёмки.<br>2. Указать поставщика, не добавляя ни одной позиции.<br>3. Сохранить приёмку.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>POST /api/receipts, supplier: «ООО «МебельПром»», items: <strong>[]</strong></td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>HTTP <strong>400</strong>, сообщение «Добавьте хотя бы одну позицию». Пустая приёмка бессмысленна и должна отклоняться.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>HTTP 400, «Добавьте хотя бы одну позицию». Результат совпал с ожидаемым.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-27 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-27 · Не указан поставщик приёмки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Пользователь авторизован с ролью «Кладовщик».</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Открыть форму новой приёмки.<br>2. Оставить поле «Поставщик» пустым (ввести только пробелы).<br>3. Добавить корректную позицию и сохранить приёмку.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>POST /api/receipts, supplier: <strong>«   »</strong> (три пробела), items: [{ productId: &lt;стул «Венский»&gt;, quantity: 2 }]</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>HTTP <strong>400</strong>, сообщение «Укажите поставщика». Пробельная строка должна трактоваться как пустое значение (проверка выполняется после обрезки пробелов).</td></tr>
+    <tr><td class="k">Фактический результат</td><td>HTTP 400, «Укажите поставщика». Пробельное значение корректно распознано как пустое.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-28 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-28 · Размещение до подтверждения приёмки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Создана приёмка со статусом «новая». Товар в зоне приёмки ещё не зачислен.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Создать приёмку: поставщик ИП Ковалёв А.Р., позиция — стул «Венский», 3 шт.<br>2. Не вызывая подтверждение, выполнить действие «Разместить».</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>POST /api/receipts/{id}/place для приёмки в статусе <code>new</code></td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>HTTP <strong>400</strong>, сообщение «Сначала подтвердите приёмку (товар должен быть в зоне приёмки)». Нарушение порядка операций (бизнес-правило БП-13) недопустимо: подбор выполняется по остатку, который ещё не зачислен.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>HTTP 400, «Сначала подтвердите приёмку (товар должен быть в зоне приёмки)» — сообщение сервера в точности соответствует спецификации, действие отклонено, состояние склада не изменено.</td></tr>
+  </table>
+</div>
+
+<!-- ─── TC-29 ─── -->
+<div class="tc">
+  <div class="tc-head">TC-29 · Повторное размещение полностью размещённой приёмки <span class="st">Pass</span></div>
+  <table>
+    <tr><td class="k">Предусловия</td><td>Приёмка из 3 шт. подтверждена — товар зачислен в ячейку приёмки ПРИ-000.</td></tr>
+    <tr><td class="k">Шаги</td><td>1. Подтвердить приёмку.<br>2. Выполнить «Разместить» в первый раз.<br>3. Прочитать статус приёмки.<br>4. Выполнить «Разместить» повторно, без каких-либо изменений.</td></tr>
+    <tr><td class="k">Тестовые данные</td><td>Приёмка: стул «Венский», 3 шт. Двойной вызов POST /api/receipts/{id}/place.</td></tr>
+    <tr><td class="k">Ожидаемый результат</td><td>Первое размещение: <code>complete = true</code>, выполнено перемещение из ПРИ-000 в ячейку хранения, статус приёмки — «размещена». Повторное размещение: <code>complete = true</code>, перемещений <strong>0</strong> (все позиции уже размещены), список <code>problems</code> пуст, аварийного завершения нет. Операция должна быть идемпотентной.</td></tr>
+    <tr><td class="k">Фактический результат</td><td>Первое размещение: <code>complete=true</code>, перемещений 1, статус «placed». Повторное размещение: <code>complete=true</code>, перемещений <strong>0</strong>, <code>problems=0</code>. Повторный вызов безопасен — двойного списания остатка не произошло.</td></tr>
+  </table>
+</div>
+
+<!-- ══════════════════ 6 ══════════════════ -->
+<h2 class="pb"><span class="step-num">6</span> Чек-лист</h2>
+
+<p>Чек-лист предназначен для быстрой проверки модуля администратором или кладовщиком при приёмке поставки.
+Пункты сформулированы кратко и проверяемо: на каждый пункт можно ответить однозначно «да» или «нет».</p>
+
+<table>
+  <thead>
+    <tr><th class="center" style="width:6%">№</th><th style="width:62%">Проверяемое условие</th><th class="center" style="width:16%">Способ проверки</th><th class="center" style="width:16%">Покрывающий тест-кейс</th></tr>
+  </thead>
+  <tbody>
+    <tr><td class="center">1</td><td>Товар размещается только в ячейку, габариты которой не меньше габаритов товара (с учётом возможного поворота)</td><td class="center">Подбор по карточке товара</td><td class="center">TC-02, TC-03, TC-04</td></tr>
+    <tr><td class="center">2</td><td>В ячейку не предлагается разместить груз, превышающий её предельную массу</td><td class="center">Сопоставление массы товара и ячейки</td><td class="center">TC-15, TC-16</td></tr>
+    <tr><td class="center">3</td><td>Вместимость ячейки рассчитывается с округлением вниз: неполная единица товара не размещается</td><td class="center">Проверить значение «вместимость»</td><td class="center">TC-10, TC-14</td></tr>
+    <tr><td class="center">4</td><td>Товар с признаком «хрупкий» не размещается на 3-м ярусе стеллажа</td><td class="center">Подбор хрупкого товара</td><td class="center">TC-05, TC-07, TC-08</td></tr>
+    <tr><td class="center">5</td><td>При наличии места товар докладывается в ячейку, где уже лежит этот же товар</td><td class="center">Подбор повторного товара</td><td class="center">TC-09, TC-11</td></tr>
+    <tr><td class="center">6</td><td>Ячейка, в которой свободного места меньше объёма одной единицы, в подбор не предлагается</td><td class="center">Подбор почти заполненной ячейки</td><td class="center">TC-10, TC-15</td></tr>
+    <tr><td class="center">7</td><td>Ячейки заблокированные, требующие ремонта, а также ячейки зон приёмки и отгрузки в подбор не попадают</td><td class="center">Проверить статус ячейки</td><td class="center">TC-18</td></tr>
+    <tr><td class="center">8</td><td>В первую очередь предлагаются ячейки с классом ходкости, совпадающим с классом товара</td><td class="center">Подбор при дефиците места</td><td class="center">TC-20, TC-12</td></tr>
+    <tr><td class="center">9</td><td>Если ячеек своего класса не хватило, предлагаются ячейки другого класса с соответствующей причиной выбора</td><td class="center">Проверить поле «причина»</td><td class="center">TC-03, TC-12, TC-17</td></tr>
+    <tr><td class="center">10</td><td>Каждая единица размещается в отдельной ячейке, адрес в подборе не повторяется</td><td class="center">Подбор крупной партии</td><td class="center">TC-19, TC-21</td></tr>
+    <tr><td class="center">11</td><td>Ячейки выдаются в порядке: нижние ярусы первыми, затем ближайшие к зоне отгрузки</td><td class="center">Порядок в списке подбора</td><td class="center">TC-21</td></tr>
+    <tr><td class="center">12</td><td>При нехватке ячеек выполняется частичное размещение, остаток остаётся в приёмке, а кладовщику выдаётся сообщение с точным количеством остатка</td><td class="center">Подбор крупной партии</td><td class="center">TC-13, TC-22, TC-23</td></tr>
+    <tr><td class="center">13</td><td>При невозможности размещения система не завершается аварийно, а выдаёт понятное сообщение на русском языке</td><td class="center">Товар не помещается ни в одну ячейку</td><td class="center">TC-04, TC-07, TC-13</td></tr>
+    <tr><td class="center">14</td><td>Размещение выполняется только для подтверждённой приёмки; входные данные проверяются на сервере</td><td class="center">Попытка обхода клиента</td><td class="center">TC-24…TC-28</td></tr>
+    <tr><td class="center">15</td><td>Повторный вызов размещения полностью размещённой приёмки не приводит к двойному списанию остатка</td><td class="center">Двойное нажатие «Разместить»</td><td class="center">TC-29</td></tr>
+  </tbody>
+</table>
+
+<!-- ══════════════════ 7 ══════════════════ -->
+<h2><span class="step-num">7</span> Вывод</h2>
+
+<div class="answer">
+  <h4>Применённые техники тест-дизайна</h4>
+  <ol>
+    <li><strong>Классы эквивалентности</strong> — выделены для всех входных параметров модуля: габариты товара
+    (4 класса), масса (4 класса), класс ходкости (4 класса), признак хрупкости в связке с ярусом (3 класса),
+    количество единиц (4 класса), состояние ячейки-кандидата (6 классов). Впервые выделены и недопустимые
+    классы, что позволяет проверить не только работоспособность, но и защиту от ошибочных данных.</li>
+    <li><strong>Граничные значения</strong> — проверены обе стороны каждой границы: 900/1200 мм (габариты
+    стеллажной ячейки), 2600 мм (длина крупногабаритной ячейки), 104/210 кг (грузоподъёмность),
+    0,0112/0,6525 м³ (свободный объём), ярусы 2 и 3 (хрупкий товар), количество 0 и 1.</li>
+    <li><strong>Таблица решений</strong> — построена для основной бизнес-логики выбора стратегии размещения.
+    6 правил покрывают все 8 комбинаций трёх условий; правила взаимно исключающие. Составлена таблица
+    соответствия «правило → тест-кейс», подтверждающая полноту покрытия.</li>
+    <li><strong>Попарное тестирование</strong> — для 5 бинарных параметров построен минимальный набор
+    из 8 комбинаций, покрывающий все 20 пар параметров и все 80 сочетаний значений. Объём проверок
+    сокращён с 32 до 8 (в 4 раза) без потери покрытия.</li>
+    <li><strong>Тест-кейсы</strong> — разработано 29 тест-кейсов (требовалось не менее 15) и выполнено
+    на действующем сервере проекта. Все 29 получили статус Pass.</li>
+    <li><strong>Чек-лист</strong> — составлен из 15 пунктов (требовалось 10–12) для быстрой проверки модуля
+    при приёмке поставки, с привязкой каждого пункта к проверяющему тест-кейсу.</li>
+  </ol>
+
+  <h4>Покрытые риски</h4>
+  <ul>
+    <li><strong>Перегрузка ячейки</strong> — превышение предельной массы или объёма (TC-15, TC-16, TC-10).</li>
+    <li><strong>Повреждение хрупкого груза</strong> — размещение мебели и зеркал на 3-м ярусе (TC-05, TC-07, TC-08).</li>
+    <li><strong>Неразмещение партии</strong> — товар, не помещающийся ни в одну ячейку склада (TC-04).</li>
+    <li><strong>Потеря партии при частичном размещении</strong> — расхождение между принятым и размещённым
+    количеством (TC-22, TC-23).</li>
+    <li><strong>Размещение в нерабочую ячейку</strong> — заблокированные и требующие ремонта ячейки (TC-18),
+    ячейки с незаполненным классом ходкости (TC-17).</li>
+    <li><strong>Нарушение товарооборота по классам</strong> — размещение быстрооборачиваемого товара
+    в зону медленного оборота (TC-20, TC-12).</li>
+    <li><strong>Неоптимальный маршрут кладовщика</strong> — неверный порядок выдачи ячеек (TC-21).</li>
+    <li><strong>Искажение учёта</strong> — отрицательное и нулевое количество, пустой документ,
+    нарушение порядка операций (TC-24…TC-28).</li>
+    <li><strong>Двойное списание остатка</strong> — повторный вызов размещения (TC-29).</li>
+  </ul>
+
+  <h4>Проверки, оставшиеся за рамками работы</h4>
+  <ul>
+    <li><strong>Производительность и нагрузка</strong> — время отклика при одновременной работе 5 пользователей
+    и при полностью занятом складе (108 ячеек).</li>
+    <li><strong>Точность расчётов при дробных значениях</strong> — поведение округления для товаров
+    с дробной массой и объёмом на уровне вывода в интерфейс.</li>
+    <li><strong>Интеграция</strong> — сканер штрихкодов, печать этикеток, обмен данными с бухгалтерией
+    (XML/JSON), совместимость с 1С.</li>
+    <li><strong>Интерфейс</strong> — отображение списка подбора на мобильном устройстве, поведение при
+    обрыве связи в момент перемещения товара.</li>
+    <li><strong>Безопасность</strong> — проверка прав ролей «Кладовщик» и «Грузчик» на действии размещения,
+    устойчивость к подделке JWT.</li>
+    <li><strong>Восстановление данных</strong> — поведение модуля при аварийном завершении сервера
+    в момент перемещения товара между ячейками.</li>
+    <li><strong>Параллельные операции</strong> — одновременное размещение двух приёмок кладовщиками
+    (состояние гонки данных).</li>
+  </ul>
+
+  <h4>Итоговая оценка результата</h4>
+  <p>Разработанный набор тест-кейсов полностью покрывает выделенные классы эквивалентности, все граничные
+  значения и все правила таблицы решений. Ни один из 29 тест-кейсов не выявил расхождения с техническим
+  заданием: модуль автоматического подбора ячеек хранения реализован в соответствии с требованием Т9 и
+  корректно обрабатывает все предусмотренные спецификацией ситуации, включая ошибочные входные данные.
+  Цель практического задания достигнута.</p>
+</div>
+
+<!-- ══════════════════ ПРИЛОЖЕНИЕ А ══════════════════ -->
+<h2 class="pb">Приложение А. Протокол выполнения тест-кейсов</h2>
+
+<p>Тест-кейсы выполнялись на копии серверной части проекта с загруженными демонстрационными данными.
+Ниже приведены фрагменты фактического вывода автоматизированного прогона.</p>
+
+<h4>А.1. Прогон тест-кейсов TC-01 … TC-22 (проверка функции подбора ячеек)</h4>
+<pre style="background:#f0f3f8;border:1px solid #b8c4d6;border-radius:5px;padding:12px 14px;overflow-x:auto;font-size:12px;line-height:1.45;">PASS TC-01 Базовый подбор в свободную ячейку своего класса ходкости
+     ожид: Подобрана свободная стеллажная ячейка класса A, причина «свободна, класс A», вместимость 44 шт.
+     факт:  A1-01-1 (ярус 1, вместимость 44 шт., «свободна, класс A»)
+
+PASS TC-02 Граничный размер: наибольшая сторона товара 1200 мм равна наименьшей стороне ячейки
+     ожид: Ячейка 1200×1000×900 подходит, подобрана ячейка класса B на ярусе 1, вместимость 22 шт.
+     факт:  B1-01-1 (ярус 1, вместимость 22 шт., «свободна, класс B»)
+
+PASS TC-03 Граничный размер: длина товара 2600 мм равна длине крупногабаритной ячейки
+     ожид: Подобрана крупногабаритная ячейка с причиной «вне зоны класса — по габаритам», вместимость 2 шт.
+     факт:  К1-01 (ярус 1, вместимость 2 шт., «вне зоны класса — по габаритам»)
+
+PASS TC-04 Габариты товара превышают габариты всех ячеек склада
+     ожид: Список ячеек пуст; позиция остаётся в зоне приёмки
+     факт:  пустой список
+
+PASS TC-05 Хрупкий товар не размещается на 3-м ярусе
+     ожид: Подобраны ярусы 1 и 2; ячейка B1-01-3 (3-й ярус) в подбор не попала
+     факт:  B1-01-1 (ярус 1, вместимость 22 шт.); B1-01-2 (ярус 2, вместимость 22 шт.)
+
+PASS TC-06 Хрупкий товар при свободных ярусах 1 и 2 размещается полностью
+     ожид: Обе ячейки подходят, вместимость каждой 22 шт.
+     факт:  B1-01-1 (22 шт.); B1-01-2 (22 шт.)
+
+PASS TC-07 Хрупкий товар при единственной свободной ячейке 3-го яруса
+     ожид: Список ячеек пуст: единственная свободная ячейка отклонена по признаку «хрупкий»
+     факт:  пустой список
+
+PASS TC-08 Нехрупкий товар допускается на 3-м ярусе
+     ожид: Ячейка 3-го яруса подобрана, вместимость 7 шт.
+     факт:  C1-01-3 (ярус 3, вместимость 7 шт., «свободна, класс C»)
+
+PASS TC-09 Докладка товара в занятую ячейку с тем же товаром
+     ожид: Первой A1-01-1 с причиной «докладка в ту же ячейку», вместимость 3 шт.
+     факт:  A1-01-1 (ярус 1, вместимость 3 шт., «докладка в ту же ячейку»);
+           A1-02-1 (ярус 1, вместимость 5 шт., «свободна, класс A»)
+
+PASS TC-10 Докладка отклонена: свободного объёма ячейки недостаточно
+     ожид: A1-01-1 в подбор не попала; предложена свободная ячейка класса A
+     факт:  A1-02-1 (ярус 1, вместимость 5 шт., «свободна, класс A»)
+
+PASS TC-11 Докладка плюс размещение остатка в новые ячейки
+     ожид: A1-01-1 (3 шт., докладка) + вторая свободная ячейка класса A
+     факт:  A1-01-1 (3 шт., «докладка в ту же ячейку»); A1-02-1 (5 шт., «свободна, класс A»)
+
+PASS TC-12 Нет свободных ячеек своего класса — подбор ячейки другого класса
+     ожид: Подобрана ячейка B1-01-1 с причиной «вне зоны класса — по габаритам»
+     факт:  B1-01-1 (ярус 1, вместимость 5 шт., «вне зоны класса — по габаритам»)
+
+PASS TC-13 Нет ни одной свободной ячейки — частичное размещение
+     ожид: Список ячеек пуст
+     факт:  пустой список
+
+PASS TC-14 Вместимость ячейки округляется вниз
+     ожид: Вместимость 5 шт. (⌊1,08 / 0,2137⌋ = 5)
+     факт:  A1-01-1 (ярус 1, вместимость 5 шт., «свободна, класс A»)
+
+PASS TC-15 Грузоподъёмности ячейки недостаточно даже для одной единицы
+     ожид: Ячейка не предлагается (вместимость ⌊104 / 105⌋ = 0 шт.)
+     факт:  пустой список
+
+PASS TC-16 Граница грузоподъёмности: ровно две единицы помещаются
+     ожид: Ячейка подобрана, вместимость 2 шт. (⌊210 / 105⌋ = 2)
+     факт:  К2-01 (ярус 1, вместимость 2 шт., «вне зоны класса — по габаритам»)
+
+PASS TC-17 Ячейка зоны хранения с незаполненным классом ходкости
+     ожид: A2-01-1 исключена из подбора; подобрана B1-01-1
+     факт:  B1-01-1 (ярус 1, вместимость 5 шт., «вне зоны класса — по габаритам»)
+
+PASS TC-18 Заблокированная ячейка не участвует в подборе
+     ожид: Список ячеек пуст
+     факт:  пустой список
+
+PASS TC-19 Сборный груз размещается в несколько ячеек хранения
+     ожид: Предложены две разные ячейки, в каждой вместимость 1 шт.
+     факт:  B1-01-1 (1 шт.); B1-01-2 (1 шт.)
+
+PASS TC-20 Приоритет своей ячейки над ячейкой другого класса
+     ожид: В подбор попала только A1-01-1 с причиной «свободна, класс A»
+     факт:  A1-01-1 (ярус 1, вместимость 5 шт., «свободна, класс A»)
+
+PASS TC-21 Порядок выдачи: нижние ярусы, затем ближайшие к зоне отгрузки
+     ожид: К1-01, B1-01-1, B1-01-2, B1-01-3
+     факт:  К1-01 (14 шт.); B1-01-1 (2 шт.); B1-01-2 (2 шт.); B1-01-3 (2 шт.)
+
+PASS TC-22 Количество превышает суммарную вместимость выбранных ячеек
+     ожид: Подбор не пуст: предложена одна ячейка вместимостью 5 шт.
+     факт:  A1-01-1 (ярус 1, вместимость 5 шт., «свободна, класс A»)
+
+===== ИТОГО: 22 из 22 пройдено, 0 провалено =====</pre>
+
+<h4>А.2. Прогон тест-кейсов TC-23 … TC-29 (проверка через программный интерфейс)</h4>
+<pre style="background:#f0f3f8;border:1px solid #b8c4d6;border-radius:5px;padding:12px 14px;overflow-x:auto;font-size:12px;line-height:1.45;">PASS TC-23 Частичное размещение — отчёт пользователю
+     ожид: complete = false; перемещено 5 шт. в A1-01-1; problems содержит сообщение
+           «не хватило свободных ячеек (495 шт. остались в приёмке)»; статус «confirmed»
+     факт:  complete=false, перемещений 1 (A1-01-1×5),
+           problems: «Стул «Венский»: не хватило свободных ячеек (495 шт. остались в приёмке)»,
+           статус «confirmed», размещено 5 из 500
+
+PASS TC-24 Количество единиц равно нулю
+     ожид: HTTP 400, «Каждая позиция: товар и количество &gt; 0»
+     факт:  HTTP 400, «Каждая позиция: товар и количество &gt; 0»
+
+PASS TC-25 Отрицательное количество единиц
+     ожид: HTTP 400, «Каждая позиция: товар и количество &gt; 0»
+     факт:  HTTP 400, «Каждая позиция: товар и количество &gt; 0»
+
+PASS TC-26 Пустой список позиций приёмки
+     ожид: HTTP 400, «Добавьте хотя бы одну позицию»
+     факт:  HTTP 400, «Добавьте хотя бы одну позицию»
+
+PASS TC-27 Не указан поставщик приёмки
+     ожид: HTTP 400, «Укажите поставщика»
+     факт:  HTTP 400, «Укажите поставщика»
+
+PASS TC-28 Размещение до подтверждения приёмки
+     ожид: HTTP 400, «Сначала подтвердите приёмку (товар должен быть в зоне приёмки)»
+     факт:  HTTP 400, «Сначала подтвердите приёмку (товар должен быть в зоне приёмки)»
+
+PASS TC-29 Повторное размещение полностью размещённой приёмки
+     ожид: Размещение №1: complete = true, перемещение выполнено, статус «placed»;
+           Размещение №2: complete = true, перемещений 0, problems = 0
+     факт:  подтверждение → ПРИ-000; размещение №1: complete=true, перемещений 1, статус «placed»;
+           повторное размещение №2: complete=true, перемещений 0, problems=0
+
+===== API: 7 из 7 пройдено =====</pre>
+
+<div class="note">
+  <strong>Сводка:</strong> выполнено 29 тест-кейсов, из них 22 — на уровне функции подбора ячеек,
+  7 — на уровне программного интерфейса приёмочного сценария. Тест-кейсов со статусом Fail не выявлено.
+</div>
+
+<!-- ══════════════════ ПРИЛОЖЕНИЕ Б ══════════════════ -->
+<h2>Приложение Б. Ответы на контрольные вопросы для защиты работы</h2>
+
+<h4>1. Почему выбрана именно эта система для тестирования?</h4>
+<p>Выбран модуль автоматического подбора ячеек хранения ИС «Склад», поскольку он, во-первых, является
+частью собственного проекта и доступен для реального выполнения тест-кейсов, во-вторых, содержит
+явную логику принятия решений (три стратегии размещения), что соответствует требованию задания о
+наличии нескольких входных параметров, влияющих на результат, и в-третьих, ошибки в нём имеют
+наиболее тяжёлые последствия: перегрузка ячейки, порча хрупкой мебели или невозможность разместить
+поставку приводят к прямому материальному ущербу.</p>
+
+<h4>2. Какие техники тест-дизайна применены и почему?</h4>
+<ul>
+  <li><strong>Классы эквивалентности</strong> — чтобы сократить бесконечное множество значений параметров
+  до конечного числа проверяемых групп с одинаковым результатом, и отдельно выделить недопустимые
+  значения, чтобы проверить защиту системы от ошибочного ввода.</li>
+  <li><strong>Граничные значения</strong> — потому что дефекты чаще всего возникают на границах условий
+  (товар ровно в размер ячейки, грузоподъёмность ровно на одну единицу меньше нужной).</li>
+  <li><strong>Таблица решений</strong> — потому что логика модуля представляет собой каскад из трёх
+  последовательных этапов с приоритетами, что естественно описывается комбинациями условий и действий.</li>
+  <li><strong>Попарное тестирование</strong> — потому что полный перебор 32 комбинаций избыточен,
+  а дефекты в 80–90 % случаев проявляются уже при взаимодействии двух параметров.</li>
+  <li><strong>Чек-лист</strong> — как средство быстрой регрессионной проверки для кладовщика, не требующее
+  изучения тест-кейсов.</li>
+</ul>
+
+<h4>3. Чем классы эквивалентности отличаются от граничных значений?</h4>
+<p>Класс эквивалентности — это группа значений параметра, которые приводят к <em>одинаковому</em> результату
+работы системы; из каждого класса достаточно проверить одно-два значения. Классы бывают допустимыми
+(система обрабатывает значение корректно) и недопустимыми (система обязана отклонить значение).
+Граничные значения — это конкретные числа на границах между классами: последнее допустимое, первое
+недопустимое и ближайшие к ним значения. Граничные значения дополняют классы: если внутри класса
+поведение однородно, то на границе между классами поведение может быть неверным (частая ошибка
+программиста — использование строгого сравнения вместо нестрогого или «на единицу больше»).
+В настоящей работе классы эквивалентности проверяются тест-кейсами TC-01…TC-14, а граничные значения —
+тест-кейсами TC-02, TC-03, TC-14, TC-15, TC-16.</p>
+
+<h4>4. Как строилась таблица решений?</h4>
+<p>Сначала были выделены условия, определяющие результат: наличие занятой ячейки с тем же товаром (У1),
+наличие свободной ячейки своего класса (У2), наличие свободной ячейки другого класса (У3). Затем
+определены действия: стратегия размещения, причина выбора, результат для позиции приёмки и статус
+приёмки. Далее условия были сгруппированы в правила так, чтобы они были взаимно исключающими
+(для любой комбинации условий подходит ровно одно правило) и полными (покрывают все комбинации).
+Для условий, не влияющих на результат в конкретном правиле, проставлен прочерк «—» (don't care).
+Отдельно выделены два случая отказа — когда ячеек нет вообще (П4) и когда ячеек есть, но количества
+не хватает (П6), — поскольку они требуют разных действий кладовщика.</p>
+
+<h4>5. В чём преимущество попарного тестирования?</h4>
+<p>При пяти бинарных параметрах полный перебор требует 32 проверки, а попарный — 8, то есть в четыре раза
+меньше, при полном покрытии всех пар значений. Это сокращает время тестирования и стоимость прогонов,
+что особенно важно при регрессионном тестировании, выполняемом после каждого изменения. Кроме того,
+метод позволяет сосредоточить ресурсы на наиболее критичных сочетаниях параметров, оставив
+экзотические комбинации для ручной проверки или отложенного тестирования.</p>
+
+<h4>6. Какие проверки остались за рамками набора тест-кейсов и почему?</h4>
+<p>За рамками остались: нагрузочное тестирование (проверка времени отклика при работе 5 пользователей),
+тестирование интеграций (сканер штрихкодов, печать этикеток, обмен данными с бухгалтерией), проверки
+пользовательского интерфейса на мобильном устройстве, тестирование безопасности (проверка прав ролей
+на действии размещения), поведение при аварийном завершении сервера в момент перемещения товара и
+тестирование параллельного размещения двух приёмок. Причина — ограниченность ресурса времени,
+отведённого на практическое задание: перечисленные проверки требуют отдельного тестового окружения
+(нагрузочного стенда, средств сканирования, нескольких одновременно работающих пользователей) и
+относятся к категории функционального, а не модульного тестирования. Их следует включить в план
+приёмочных испытаний на этапе 7 технического задания.</p>
+
+<div class="footer">
+  Практическое задание по теме «Тест-дизайн» · МДК.05.03 «Тестирование информационных систем» · 4 курс<br>
+  Объект тестирования: модуль автоматического подбора ячеек хранения ИС «Склад» для ООО «Домашний интерьер»<br>
+  Выполнили: Резанов К. В., Пильчук С. Ю. · 2026 г.
+</div>
+
+</div>
+</body>
+</html>

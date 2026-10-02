@@ -1,0 +1,76 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Страница-1" id="09vPnvE5SUrS4meAYQ-U">
+    <mxGraphModel dx="1716" dy="977" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-854" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" value="Физическое размещение" vertex="1">
+          <mxGeometry height="30" width="800" x="350" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-855" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;VPS / Customer Server&amp;#10;(VPS / сервер заказчика)&amp;#10;OS: Linux Ubuntu 22.04&amp;#10;Docker + Nginx" vertex="1">
+          <mxGeometry height="460" width="460" x="110" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-856" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;Backend Application&amp;#10;(Backend-приложение: REST API)" vertex="1">
+          <mxGeometry height="80" width="200" x="150" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-857" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;PostgreSQL DB&amp;#10;(БД PostgreSQL)" vertex="1">
+          <mxGeometry height="80" width="200" x="150" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-858" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;File Storage&amp;#10;(Файловое хранилище)" vertex="1">
+          <mxGeometry height="80" width="180" x="370" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-859" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;Nginx Web Server&amp;#10;(Веб-сервер Nginx)" vertex="1">
+          <mxGeometry height="80" width="180" x="370" y="600" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-860" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;Backup Script (cron)&amp;#10;(Скрипт резервного копирования)" vertex="1">
+          <mxGeometry height="80" width="220" x="220" y="710" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-861" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;Manager PC&amp;#10;(ПК менеджера)&amp;#10;Browser (Chrome / Firefox)" vertex="1">
+          <mxGeometry height="200" width="300" x="710" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-862" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;Web UI&amp;#10;(Веб-интерфейс)" vertex="1">
+          <mxGeometry height="70" width="200" x="760" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-863" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;Storekeeper Smartphone&amp;#10;(Смартфон кладовщика)&amp;#10;Android + PWA" vertex="1">
+          <mxGeometry height="200" width="300" x="1110" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-864" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;PWA App&amp;#10;(PWA-приложение)" vertex="1">
+          <mxGeometry height="70" width="200" x="1160" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-865" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;Loader Smartphone&amp;#10;(Смартфон грузчика)&amp;#10;Android + PWA" vertex="1">
+          <mxGeometry height="180" width="300" x="1110" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-866" parent="1" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffffff;strokeColor=#000000;size=14;fontSize=10;align=center;" value="&amp;lt;&amp;lt;artifact&amp;gt;&amp;gt;&amp;#10;PWA App&amp;#10;(PWA-приложение)" vertex="1">
+          <mxGeometry height="70" width="200" x="1160" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-867" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;Label Printer&amp;#10;(Принтер этикеток)&amp;#10;USB / Network" vertex="1">
+          <mxGeometry height="180" width="300" x="710" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-868" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;Accounting Workstation&amp;#10;(АРМ бухгалтера)&amp;#10;1C / XML, JSON exchange" vertex="1">
+          <mxGeometry height="180" width="300" x="710" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-869" parent="1" style="shape=umlNode;perimeter=rectPerimeter;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;fontSize=11;verticalAlign=top;spacingTop=10;" value="&amp;lt;&amp;lt;device&amp;gt;&amp;gt;&amp;#10;External Backup Drive&amp;#10;(Внешний диск резервных копий)" vertex="1">
+          <mxGeometry height="180" width="300" x="110" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-870" edge="1" parent="1" source="ZOL2ILbYpqF5K_sXLGB3-861" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;fontSize=10;labelBackgroundColor=#ffffff;" target="ZOL2ILbYpqF5K_sXLGB3-855" value="HTTPS / REST API">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-871" edge="1" parent="1" source="ZOL2ILbYpqF5K_sXLGB3-863" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;fontSize=10;labelBackgroundColor=#ffffff;" target="ZOL2ILbYpqF5K_sXLGB3-855" value="HTTPS / REST API">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-872" edge="1" parent="1" source="ZOL2ILbYpqF5K_sXLGB3-865" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;fontSize=10;labelBackgroundColor=#ffffff;" target="ZOL2ILbYpqF5K_sXLGB3-855" value="HTTPS / REST API">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-873" edge="1" parent="1" source="ZOL2ILbYpqF5K_sXLGB3-867" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;fontSize=10;labelBackgroundColor=#ffffff;" target="ZOL2ILbYpqF5K_sXLGB3-855" value="USB / LAN">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-874" edge="1" parent="1" source="ZOL2ILbYpqF5K_sXLGB3-868" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;fontSize=10;labelBackgroundColor=#ffffff;" target="ZOL2ILbYpqF5K_sXLGB3-855" value="HTTPS / XML, JSON">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-875" edge="1" parent="1" source="ZOL2ILbYpqF5K_sXLGB3-869" style="endArrow=none;html=1;rounded=0;strokeColor=#000000;fontSize=10;labelBackgroundColor=#ffffff;" target="ZOL2ILbYpqF5K_sXLGB3-855" value="Daily backup (cron)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

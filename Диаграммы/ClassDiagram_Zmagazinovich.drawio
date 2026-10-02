@@ -1,0 +1,112 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Страница-1" id="09vPnvE5SUrS4meAYQ-U">
+    <mxGraphModel dx="2115" dy="1003" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-523" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" value="Приёмка товара" vertex="1">
+          <mxGeometry height="30" width="800" x="610" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-524" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="Storekeeper&amp;#10;(Кладовщик)" vertex="1">
+          <mxGeometry height="900" width="120" x="410" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-525" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="UI (Web/PWA)&amp;#10;(Интерфейс)" vertex="1">
+          <mxGeometry height="900" width="120" x="650" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-526" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="ReceiptService&amp;#10;(Сервис приёмки)" vertex="1">
+          <mxGeometry height="900" width="140" x="890" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-527" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="PlacementService&amp;#10;(Сервис размещения)" vertex="1">
+          <mxGeometry height="900" width="140" x="1150" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-528" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="Database&amp;#10;(БД)" vertex="1">
+          <mxGeometry height="900" width="120" x="1410" y="530" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-529" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="1. Open receipt form&amp;#10;(Открыть форму приёмки)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="630" as="sourcePoint" />
+            <mxPoint x="710" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-530" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="2. Send goods data&amp;#10;(Передать данные товара)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="690" as="sourcePoint" />
+            <mxPoint x="960" y="690" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-531" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="3. Validate &amp;amp; save receipt&amp;#10;(Проверить и сохранить)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="960" y="750" as="sourcePoint" />
+            <mxPoint x="1470" y="750" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-532" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="4. Return receipt_id&amp;#10;(Вернуть ID накладной)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1470" y="810" as="sourcePoint" />
+            <mxPoint x="960" y="810" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-533" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="5. Request placement suggestion&amp;#10;(Запрос рекомендации по размещению)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="960" y="870" as="sourcePoint" />
+            <mxPoint x="1220" y="870" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-534" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="6. Query free cells&amp;#10;(Запрос свободных ячеек)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="930" as="sourcePoint" />
+            <mxPoint x="1470" y="930" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-535" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="7. Return cell list&amp;#10;(Вернуть список ячеек)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1470" y="990" as="sourcePoint" />
+            <mxPoint x="1220" y="990" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-536" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="8. Return suggested cell&amp;#10;(Вернуть рекомендованную ячейку)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1220" y="1050" as="sourcePoint" />
+            <mxPoint x="960" y="1050" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-537" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="9. Show suggested cell&amp;#10;(Показать ячейку)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="960" y="1110" as="sourcePoint" />
+            <mxPoint x="710" y="1110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-538" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="10. Scan barcode &amp;amp; confirm&amp;#10;(Сканировать ШК и подтвердить)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="470" y="1170" as="sourcePoint" />
+            <mxPoint x="710" y="1170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-539" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="11. Update stock&amp;#10;(Обновить остаток)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="1230" as="sourcePoint" />
+            <mxPoint x="960" y="1230" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-540" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="12. Write to stocks table&amp;#10;(Запись в таблицу остатков)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="960" y="1290" as="sourcePoint" />
+            <mxPoint x="1470" y="1290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-541" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="13. Log operation&amp;#10;(Записать операцию в журнал)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="960" y="1350" as="sourcePoint" />
+            <mxPoint x="1470" y="1350" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-542" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="14. Confirm success&amp;#10;(Подтвердить успех)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="710" y="1410" as="sourcePoint" />
+            <mxPoint x="470" y="1410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

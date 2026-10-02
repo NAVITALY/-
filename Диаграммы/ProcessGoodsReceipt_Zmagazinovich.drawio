@@ -1,0 +1,112 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Страница-1" id="09vPnvE5SUrS4meAYQ-U">
+    <mxGraphModel dx="3626" dy="1720" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-543" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=14;" value="Сборка заказа" vertex="1">
+          <mxGeometry height="30" width="800" x="920" y="520" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-544" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="Loader / Storekeeper&amp;#10;(Грузчик / Кладовщик)" vertex="1">
+          <mxGeometry height="900" width="140" x="700" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-545" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="UI (Web/PWA)&amp;#10;(Интерфейс)" vertex="1">
+          <mxGeometry height="900" width="120" x="960" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-546" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="OrderService&amp;#10;(Сервис заказов)" vertex="1">
+          <mxGeometry height="900" width="140" x="1200" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-547" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="PlacementService&amp;#10;(Сервис размещения)" vertex="1">
+          <mxGeometry height="900" width="140" x="1460" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-548" parent="1" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;fillColor=#ffffff;strokeColor=#000000;" value="Database&amp;#10;(БД)" vertex="1">
+          <mxGeometry height="900" width="120" x="1720" y="610" as="geometry" />
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-549" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="1. Open order list&amp;#10;(Открыть список заказов)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="770" y="710" as="sourcePoint" />
+            <mxPoint x="1020" y="710" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-550" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="2. Request orders&amp;#10;(Запрос заказов)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="770" as="sourcePoint" />
+            <mxPoint x="1270" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-551" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="3. Query orders table&amp;#10;(Запрос к таблице заказов)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1270" y="830" as="sourcePoint" />
+            <mxPoint x="1780" y="830" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-552" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="4. Return orders list&amp;#10;(Вернуть список)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1780" y="890" as="sourcePoint" />
+            <mxPoint x="1020" y="890" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-553" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="5. Select order&amp;#10;(Выбрать заказ)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="770" y="950" as="sourcePoint" />
+            <mxPoint x="1020" y="950" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-554" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="6. Request pick route&amp;#10;(Запрос маршрута сборки)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="1010" as="sourcePoint" />
+            <mxPoint x="1270" y="1010" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-555" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="7. Get order items &amp;amp; cells&amp;#10;(Получить позиции и ячейки)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1270" y="1070" as="sourcePoint" />
+            <mxPoint x="1530" y="1070" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-556" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="8. Build optimal route&amp;#10;(Построить оптимальный маршрут)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1530" y="1130" as="sourcePoint" />
+            <mxPoint x="1780" y="1130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-557" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="9. Return route&amp;#10;(Вернуть маршрут)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1780" y="1190" as="sourcePoint" />
+            <mxPoint x="1270" y="1190" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-558" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;dashed=1;rounded=0;strokeColor=#000000;fontSize=10;" value="10. Show route on map&amp;#10;(Показать маршрут на карте)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1270" y="1250" as="sourcePoint" />
+            <mxPoint x="1020" y="1250" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-559" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="11. Scan item barcode&amp;#10;(Сканировать ШК товара)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="770" y="1310" as="sourcePoint" />
+            <mxPoint x="1020" y="1310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-560" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="12. Confirm picked item&amp;#10;(Подтвердить сборку позиции)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1020" y="1370" as="sourcePoint" />
+            <mxPoint x="1270" y="1370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-561" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="13. Update order status&amp;#10;(Обновить статус заказа)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1270" y="1430" as="sourcePoint" />
+            <mxPoint x="1780" y="1430" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ZOL2ILbYpqF5K_sXLGB3-562" edge="1" parent="1" style="html=1;verticalAlign=bottom;endArrow=block;rounded=0;strokeColor=#000000;fontSize=10;" value="14. Log operation&amp;#10;(Записать операцию)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1270" y="1490" as="sourcePoint" />
+            <mxPoint x="1780" y="1490" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
