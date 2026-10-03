@@ -1,0 +1,13 @@
+#node_modules
+node_modules/
+
+#build
+client/dist/
+client/dist-standalone/
+
+#database
+server/data/
+
+#misc
+.DS_Store
+*.log

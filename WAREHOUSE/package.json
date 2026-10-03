@@ -1,0 +1,17 @@
+{
+  "name": "warehouse-domestic-interior",
+  "version": "1.0.0",
+  "private": true,
+  "description": "ИС для склада мебельного магазина ООО «Домашний интерьер»",
+  "scripts": {
+    "setup": "npm install && npm install --prefix server && npm install --prefix client",
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "start": "concurrently -n api,web -c blue,green \"npm start --prefix server\" \"npm run dev --prefix client\"",
+    "seed": "npm run seed --prefix server",
+    "build": "npm run build --prefix client",
+    "build:standalone": "npm run build:standalone --prefix client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

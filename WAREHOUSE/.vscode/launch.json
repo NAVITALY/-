@@ -1,0 +1,27 @@
+{
+    // F5 — открыть «Склад.html» в Chrome. Сервер, терминал и Node НЕ нужны:
+    // приложение и база (localStorage) работают прямо в браузере.
+    // Пересборка после изменения исходников: Ctrl+Shift+B → «Собрать Склад.html».
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "▶ Склад (F5 — открыть в Chrome)",
+            "type": "chrome",
+            "request": "launch",
+            "file": "${workspaceFolder}/Склад.html"
+        },
+        {
+            "name": "Склад (серверный режим :3001, для разработки)",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/server/src/index.js",
+            "env": { "PORT": "3001" },
+            "console": "integratedTerminal",
+            "serverReadyAction": {
+                "pattern": "API склада: http://localhost:([0-9]+)",
+                "uriFormat": "http://localhost:%s",
+                "action": "openExternally"
+            }
+        }
+    ]
+}

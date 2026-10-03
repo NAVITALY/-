@@ -1,0 +1,27 @@
+{
+    // Сборка автономного «Склад.html» напрямую через node (без npm —
+    // обходит блокировку PowerShell execution policy на чужих ПК).
+    // Запуск: Ctrl+Shift+B. Терминал открывать вручную не нужно.
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Собрать Склад.html",
+            "type": "process",
+            "command": "node",
+            "args": ["${workspaceFolder}/client/scripts/build-standalone.mjs"],
+            "group": { "kind": "build", "isDefault": true },
+            "presentation": { "reveal": "silent", "panel": "shared" },
+            "problemMatcher": []
+        },
+        {
+            "label": "Проверить автономный бэкенд (41 тест)",
+            "type": "process",
+            "command": "node",
+            "args": ["${workspaceFolder}/client/scripts/test-standalone.mjs"],
+            "options": { "cwd": "${workspaceFolder}/client" },
+            "group": "test",
+            "presentation": { "reveal": "always", "panel": "shared" },
+            "problemMatcher": []
+        }
+    ]
+}
